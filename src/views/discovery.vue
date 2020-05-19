@@ -1,0 +1,322 @@
+<template>
+  <div class="container">
+    <!--标题头部-->
+    <HeaderTop></HeaderTop>
+    <!--轮播-->
+    <div class="loop">
+      <div class="loopPic"></div>
+      <div class="loopPic"></div>
+      <div class="loopPic"></div>
+      <div class="loopPic"></div>
+      <span></span>
+    </div>
+    <!--导航-->
+    <nav>
+      <span>
+        <span>
+          <i class="iconfont icon-rilicalendar107"></i>
+        </span>
+        <span>每日推荐</span>
+      </span>
+      <span>
+        <span>
+          <i class="iconfont icon-icon-1"></i>
+        </span>
+        <span>歌单</span>
+      </span>
+      <span>
+        <span>
+          <i class="iconfont icon-paixingbang"></i>
+        </span>
+        <span>排行榜</span>
+      </span>
+      <span>
+        <span>
+          <i class="iconfont icon-fasheta_bg"></i>
+        </span>
+        <span>电台</span>
+      </span>
+    </nav>
+    <!--热门歌单-->
+    <div class="hotSheet">
+      <div class="hotSheetBanner">
+        <div>发现好歌单</div>
+        <div>查看更多</div>
+      </div>
+      <ul class="hotSheetContent">
+        <li>
+          <div class="picContain">
+            <span id="triangle"></span>
+            <div>
+              <img />
+            </div>
+          </div>
+          <span class="picText">男默女123213123</span>
+        </li>
+        <li>
+          <div class="picContain">
+            <span id="triangle"></span>
+            <div>
+              <img />
+            </div>
+          </div>
+          <span class="picText">男默女泪</span>
+        </li>
+        <li>
+          <div class="picContain">
+            <span id="triangle"></span>
+            <div>
+              <img />
+            </div>
+          </div>
+          <span class="picText">男默女泪</span>
+        </li>
+        <li>
+          <div class="picContain">
+            <span id="triangle"></span>
+            <div>
+              <img />
+            </div>
+          </div>
+          <span class="picText">男默女泪</span>
+        </li>
+        <li>
+          <div class="picContain">
+            <span id="triangle"></span>
+            <div>
+              <img />
+            </div>
+          </div>
+          <span class="picText">男默女泪</span>
+        </li>
+      </ul>
+    </div>
+    <!--推荐歌曲-->
+    <div class="recmmend">
+      <!--标题-->
+      <div class="recmmendWords">
+        <span class="recmmend1">推荐歌曲</span>
+        <span class="recmmend2">播放全部</span>
+      </div>
+      <!--音乐列表-->
+      <div class="recmmendMusic">
+        <div class="music">
+          <div class="playInfo">
+            <div class="playPortrait"></div>
+            <div class="playMusicInfo">
+              <span>
+                形容
+                <span>-沈以诚</span>
+              </span>
+              <span>xxxxxx</span>
+            </div>
+          </div>
+          <div class="playIcon">
+            <i class="iconfont icon-bofang_bg"></i>
+          </div>
+        </div>
+        <div class="music">
+          <div class="playInfo">
+            <div class="playPortrait"></div>
+            <div class="playMusicInfo">
+              <span>
+                形容
+                <span>-沈以诚</span>
+              </span>
+              <span>xxxxxx</span>
+            </div>
+          </div>
+          <div class="playIcon">
+            <i class="iconfont icon-bofang_bg"></i>
+          </div>
+        </div>
+        <div class="music">
+          <div class="playInfo">
+            <div class="playPortrait"></div>
+            <div class="playMusicInfo">
+              <span>
+                形容
+                <span>-沈以诚</span>
+              </span>
+              <span>xxxxxx</span>
+            </div>
+          </div>
+          <div class="playIcon">
+            <i class="iconfont icon-bofang_bg"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--播放显示-->
+    <Player></Player>
+  </div>
+</template>
+<script>
+import HeaderTop from '../components/headerTop/headerTop'
+import Player from '../components/player/player'
+export default {
+  components: {
+    HeaderTop,
+    Player
+  }
+}
+</script>
+<style lang="scss">
+.container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  /*轮播*/
+  .loop {
+    width: 300px;
+    height: 100px;
+    .loopPic {
+    }
+  }
+
+  /*导航*/
+  nav {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+
+    span {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 50px;
+      height: 50px;
+      i {
+        vertical-align: middle;
+      }
+      &:last-child {
+        font-size: 10px;
+        flex: 0 2 auto;
+      }
+    }
+  }
+  .hotSheet {
+    margin: 20px 0;
+    width: 100%;
+    overflow: hidden;
+    .hotSheetBanner {
+      vertical-align: middle;
+      display: flex;
+      justify-content: space-between;
+      padding: 0 10px;
+      :first-child {
+        font-size: 20px;
+        font-weight: bold;
+      }
+      :last-child {
+        border: 1px solid rgb(172, 171, 171);
+        border-radius: 35px;
+        padding: 5px;
+        font-size: 13px;
+        width: 60px;
+        text-align: center;
+      }
+    }
+    .hotSheetContent {
+      display: flex;
+      flex-wrap: nowrap;
+      justify-content: flex-start;
+      margin: 5px 0;
+      li {
+        margin-left: 5px;
+        .picContain {
+          position: relative;
+          overflow: hidden;
+          width: 100px;
+          height: 100px;
+          border: 1px solid #ccc;
+          border-radius: 5px;
+          #triangle {
+            border-width: 6px 0 6px 11px;
+            width: 0;
+            height: 0;
+            border-color: transparent transparent transparent #ccc;
+            border-style: solid;
+            position: absolute;
+            right: 20px;
+            &::after {
+              content: '';
+              border-width: 5px 0 5px 9px;
+              left: -10.5px;
+              top: -5px;
+              width: 0;
+              height: 0;
+              border-color: transparent transparent transparent
+                rgba(0, 0, 0, 0.5);
+              border-style: solid;
+              position: absolute;
+              z-index: 2;
+            }
+          }
+        }
+        .picText {
+          word-break: break-all;
+          width: 100%;
+        }
+      }
+    }
+  }
+  /*推荐音乐*/
+  .recmmend {
+    margin-top: 10px;
+    width: 100%;
+
+    .recmmendWords {
+      display: flex;
+      justify-content: space-between;
+
+      .recmmend1 {
+        margin-left: 10px;
+      }
+
+      .recmmend2 {
+        margin-right: 10px;
+      }
+    }
+
+    .recmmendMusic {
+      .music {
+        display: flex;
+        justify-content: space-between;
+        height: 60px;
+        align-items: center;
+
+        .playInfo {
+          display: flex;
+
+          .playPortrait {
+            margin: 5px;
+            width: 50px;
+            height: 50px;
+            background-color: #ccc;
+            border-radius: 5px;
+          }
+
+          .playMusicInfo {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+
+            span:nth-child(2) {
+              color: red;
+            }
+          }
+        }
+
+        .playIcon {
+          margin-right: 10px;
+        }
+      }
+    }
+  }
+
+  /*底部音乐播放*/
+}
+</style>

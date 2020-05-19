@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>浮动float和absolute区别</title>
+    <style>
+      .box {
+        width: 500px;
+        height: 300px;
+        border: 1px solid black;
+        margin: 0 auto;
+        position: relative;
+      }
+
+      .first {
+        width: 150px;
+        height: 100px;
+
+        /*float: left;*/
+        display: inline-block;
+        background: pink;
+        border: 10px solid red;
+        /*增加了边框*/
+      }
+
+      .second {
+        width: 100px;
+        height: 100px;
+        background: blue;
+        display: inline-block;
+        position: absolute;
+        /*只设置一个浮动*/
+      }
+
+      .third {
+        width: 50px;
+        height: 100px;
+
+        /*float: left;*/
+        display: inline-block;
+        background: green;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="box">
+      <div class="first">1</div>
+      <div class="second">2</div>
+      <div class="third">3</div>
+    </div>
+  </body>
+</html>
