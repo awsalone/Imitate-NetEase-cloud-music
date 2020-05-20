@@ -2,16 +2,21 @@
   <header>
     <i class="iconfont icon-caidan_bg menu"></i>
     <ul class="headernav">
-      <li :class="{active: $route.path === '/mine'}">
-        <router-link to="/mine">我的</router-link>
-      </li>
-      <li :class="{active: $route.path === '/discovery'}">
-        <router-link to="/discovery">发现</router-link>
-      </li>
-      <li :class="{active: $router.path === '/town'}">
+      <transition name="bigger">
+        <li :class="{active: $route.path === '/mine'}">
+          <router-link to="/mine">我的</router-link>
+        </li>
+      </transition>
+      <transition name="bigger">
+        <li :class="{active: $route.path === '/discovery'}">
+          <router-link to="/discovery">发现</router-link>
+        </li>
+      </transition>
+
+      <li :class="{active: $route.path === '/town'}">
         <router-link to="/town">云村</router-link>
       </li>
-      <li :class="{active: $router.path === '/movie'}">
+      <li :class="{active: $route.path === '/movie'}">
         <router-link to="/movie">视频</router-link>
       </li>
     </ul>
@@ -52,6 +57,19 @@ header {
     .active {
       font-size: 25px;
       color: black;
+    }
+    // 没效果，之后再调整
+    .bigger-enter-active,
+    .bigger-leave-active {
+      transition: all 5s ease;
+    }
+    .bigger-enter,
+    .bigger-leave-to {
+      color: #7e8c8d;
+      font-size: 16px;
+      background-color: red;
+      transform: translateX(10px);
+      opacity: 0;
     }
   }
 }

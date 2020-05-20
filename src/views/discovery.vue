@@ -1,15 +1,16 @@
 <template>
   <div class="container">
-    <!--标题头部-->
-    <HeaderTop></HeaderTop>
     <!--轮播-->
-    <div class="loop">
-      <div class="loopPic"></div>
-      <div class="loopPic"></div>
-      <div class="loopPic"></div>
-      <div class="loopPic"></div>
-      <span></span>
-    </div>
+    <van-swipe class="loop" :autoplay="0" indicator-color="red">
+      <van-swipe-item class="loopPic" v-for="(item,index) in loops" :key="index">
+        <img :src="item.pic" alt />
+        <span
+          class="bottomIcon"
+          style="opacity:0.9"
+          :style="{backgroundColor:item.titleColor}"
+        >{{item.typeTitle}}</span>
+      </van-swipe-item>
+    </van-swipe>
     <!--导航-->
     <nav>
       <span>
@@ -44,7 +45,7 @@
         <div>查看更多</div>
       </div>
       <ul class="hotSheetContent">
-        <li>
+        <li class="hotSheetli">
           <div class="picContain">
             <span id="triangle"></span>
             <div>
@@ -53,41 +54,44 @@
           </div>
           <span class="picText">男默女123213123</span>
         </li>
-        <li>
+        <li class="hotSheetli">
           <div class="picContain">
             <span id="triangle"></span>
             <div>
               <img />
             </div>
           </div>
-          <span class="picText">男默女泪</span>
+          <span class="picText">男默女123213123</span>
         </li>
-        <li>
+
+        <li class="hotSheetli">
           <div class="picContain">
             <span id="triangle"></span>
             <div>
               <img />
             </div>
           </div>
-          <span class="picText">男默女泪</span>
+          <span class="picText">男默女123213123</span>
         </li>
-        <li>
+
+        <li class="hotSheetli">
           <div class="picContain">
             <span id="triangle"></span>
             <div>
               <img />
             </div>
           </div>
-          <span class="picText">男默女泪</span>
+          <span class="picText">男默女123213123</span>
         </li>
-        <li>
+
+        <li class="hotSheetli">
           <div class="picContain">
             <span id="triangle"></span>
             <div>
               <img />
             </div>
           </div>
-          <span class="picText">男默女泪</span>
+          <span class="picText">男默女123213123</span>
         </li>
       </ul>
     </div>
@@ -152,12 +156,23 @@
   </div>
 </template>
 <script>
-import HeaderTop from '../components/headerTop/headerTop'
 import Player from '../components/player/player'
+import { reqBanner } from '../api/index'
+import { Swipe, SwipeItem } from 'vant'
 export default {
+  data () {
+    return {
+      loops: []
+    }
+  },
   components: {
-    HeaderTop,
-    Player
+    Player,
+    [Swipe.name]: Swipe,
+    [SwipeItem.name]: SwipeItem
+  },
+  async mounted () {
+    const result = await reqBanner(1)
+    this.loops = result.banners
   }
 }
 </script>
@@ -172,7 +187,28 @@ export default {
   .loop {
     width: 300px;
     height: 100px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    display: flex;
+    overflow: hidden;
     .loopPic {
+      width: 300px;
+      height: 100px;
+      position: relative;
+      flex: 0 0 auto;
+      img {
+        width: 100%;
+        height: 100%;
+      }
+      .bottomIcon {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        padding: 5px;
+        font-size: 13px;
+        border-radius: 5px 0 0 0;
+        color: white;
+      }
     }
   }
 
@@ -224,7 +260,7 @@ export default {
       flex-wrap: nowrap;
       justify-content: flex-start;
       margin: 5px 0;
-      li {
+      .hotSheetli {
         margin-left: 5px;
         .picContain {
           position: relative;
@@ -241,6 +277,7 @@ export default {
             border-style: solid;
             position: absolute;
             right: 20px;
+            top: 2px;
             &::after {
               content: '';
               border-width: 5px 0 5px 9px;

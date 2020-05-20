@@ -2,8 +2,11 @@
   <div>视频</div>
 </template>
 <script>
-export default {
 
+export default {
+  components: {
+
+  }
 }
 </script>
 <style lang="scss">
