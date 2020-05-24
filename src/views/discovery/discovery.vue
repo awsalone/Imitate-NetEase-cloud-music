@@ -1,3 +1,4 @@
+
 <template>
   <div class="container">
     <!--轮播-->
@@ -44,56 +45,24 @@
         <div>发现好歌单</div>
         <div>查看更多</div>
       </div>
-      <ul class="hotSheetContent">
-        <li class="hotSheetli">
-          <div class="picContain">
-            <span id="triangle"></span>
-            <div>
-              <img />
+      <div class="hotSheetContent">
+        <ul class="hotSheetUl" ref="hotSheetList">
+          <li
+            class="hotSheetli"
+            v-for="(item,index) in recSongList"
+            :key="index"
+            @click="skipSongSheet(item.id)"
+          >
+            <div class="picContain">
+              <span id="triangle"></span>
+              <div>
+                <img :src="item.picUrl" />
+              </div>
             </div>
-          </div>
-          <span class="picText">男默女123213123</span>
-        </li>
-        <li class="hotSheetli">
-          <div class="picContain">
-            <span id="triangle"></span>
-            <div>
-              <img />
-            </div>
-          </div>
-          <span class="picText">男默女123213123</span>
-        </li>
-
-        <li class="hotSheetli">
-          <div class="picContain">
-            <span id="triangle"></span>
-            <div>
-              <img />
-            </div>
-          </div>
-          <span class="picText">男默女123213123</span>
-        </li>
-
-        <li class="hotSheetli">
-          <div class="picContain">
-            <span id="triangle"></span>
-            <div>
-              <img />
-            </div>
-          </div>
-          <span class="picText">男默女123213123</span>
-        </li>
-
-        <li class="hotSheetli">
-          <div class="picContain">
-            <span id="triangle"></span>
-            <div>
-              <img />
-            </div>
-          </div>
-          <span class="picText">男默女123213123</span>
-        </li>
-      </ul>
+            <span class="picText">{{item.name}}</span>
+          </li>
+        </ul>
+      </div>
     </div>
     <!--推荐歌曲-->
     <div class="recmmend">
@@ -156,13 +125,16 @@
   </div>
 </template>
 <script>
-import Player from '../components/player/player'
-import { reqBanner } from '../api/index'
+/* eslint-disable no-new */
+import Player from '../../components/player/player'
+import { reqBanner, reqRecSongSheet } from '../../api/index'
 import { Swipe, SwipeItem } from 'vant'
+import BScroll from 'better-scroll'
 export default {
   data () {
     return {
-      loops: []
+      loops: [],
+      recSongList: []
     }
   },
   components: {
@@ -170,9 +142,35 @@ export default {
     [Swipe.name]: Swipe,
     [SwipeItem.name]: SwipeItem
   },
-  async mounted () {
-    const result = await reqBanner(1)
-    this.loops = result.banners
+  methods: {
+    getLoop: async function () {
+      const result = await reqBanner(1)
+      this.loops = result.banners
+    },
+    getrecSongList: async function () {
+      const result = await reqRecSongSheet(6)
+      this.recSongList = result.result
+    },
+    skipSongSheet (id) {
+      this.$router.push({ path: `/songSheet/${id}` })
+    }
+  },
+  mounted () {
+    this.getLoop()
+    this.getrecSongList()
+  },
+  watch: {
+    recSongList () {
+      this.$nextTick(() => {
+        const count = this.recSongList.length
+        this.$refs.hotSheetList.style.width = 106 * count + 10 + 'px'
+        this.hotSheetScroll = new BScroll('.hotSheetContent', {
+          scrollX: true,
+          flickLimitDistance: 110,
+          click: true
+        })
+      })
+    }
   }
 }
 </script>
@@ -182,6 +180,10 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
+  .iconfont {
+    color: red;
+    font-size: 25px;
+  }
 
   /*轮播*/
   .loop {
@@ -217,7 +219,6 @@ export default {
     display: flex;
     justify-content: space-around;
     width: 100%;
-
     span {
       display: flex;
       flex-direction: column;
@@ -256,46 +257,54 @@ export default {
       }
     }
     .hotSheetContent {
-      display: flex;
-      flex-wrap: nowrap;
-      justify-content: flex-start;
-      margin: 5px 0;
-      .hotSheetli {
-        margin-left: 5px;
-        .picContain {
-          position: relative;
-          overflow: hidden;
-          width: 100px;
-          height: 100px;
-          border: 1px solid #ccc;
-          border-radius: 5px;
-          #triangle {
-            border-width: 6px 0 6px 11px;
-            width: 0;
-            height: 0;
-            border-color: transparent transparent transparent #ccc;
-            border-style: solid;
-            position: absolute;
-            right: 20px;
-            top: 2px;
-            &::after {
-              content: '';
-              border-width: 5px 0 5px 9px;
-              left: -10.5px;
-              top: -5px;
+      overflow: hidden;
+      .hotSheetUl {
+        display: flex;
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+        margin: 5px 0;
+        .hotSheetli {
+          margin-left: 5px;
+          .picContain {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            #triangle {
+              border-width: 6px 0 6px 11px;
               width: 0;
               height: 0;
-              border-color: transparent transparent transparent
-                rgba(0, 0, 0, 0.5);
+              border-color: transparent transparent transparent #ccc;
               border-style: solid;
               position: absolute;
-              z-index: 2;
+              right: 20px;
+              top: 2px;
+              &::after {
+                content: '';
+                border-width: 5px 0 5px 9px;
+                left: -10.5px;
+                top: -5px;
+                width: 0;
+                height: 0;
+                border-color: transparent transparent transparent
+                  rgba(0, 0, 0, 0.5);
+                border-style: solid;
+                position: absolute;
+                z-index: 2;
+              }
+            }
+            img {
+              width: 100%;
+              height: 100%;
             }
           }
-        }
-        .picText {
-          word-break: break-all;
-          width: 100%;
+          .picText {
+            word-break: break-all;
+            width: 100%;
+            font-size: 12px;
+            font-weight: 500;
+          }
         }
       }
     }

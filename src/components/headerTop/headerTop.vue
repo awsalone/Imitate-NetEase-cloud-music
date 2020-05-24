@@ -3,20 +3,20 @@
     <i class="iconfont icon-caidan_bg menu"></i>
     <ul class="headernav">
       <transition name="bigger">
-        <li :class="{active: $route.path === '/mine'}">
+        <li>
           <router-link to="/mine">我的</router-link>
         </li>
       </transition>
       <transition name="bigger">
-        <li :class="{active: $route.path === '/discovery'}">
+        <li>
           <router-link to="/discovery">发现</router-link>
         </li>
       </transition>
 
-      <li :class="{active: $route.path === '/town'}">
+      <li>
         <router-link to="/town">云村</router-link>
       </li>
-      <li :class="{active: $route.path === '/movie'}">
+      <li>
         <router-link to="/movie">视频</router-link>
       </li>
     </ul>
@@ -54,7 +54,7 @@ header {
     align-items: center;
     justify-content: space-around;
     background-color: #fff;
-    .active {
+    .router-link-active {
       font-size: 25px;
       color: black;
     }

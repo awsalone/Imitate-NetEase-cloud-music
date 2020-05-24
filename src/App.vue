@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <!--标题头部-->
-    <HeaderTop></HeaderTop>
+    <HeaderTop v-show="this.$route.meta.headerShow"></HeaderTop>
     <router-view></router-view>
   </div>
 </template>

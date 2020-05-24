@@ -1,28 +1,44 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-const discovery = () => import('../views/discovery')
-const mine = () => import('../views/mine')
-const movie = () => import('../views/movie')
-const town = () => import('../views/town')
-
+const discovery = () => import('../views/discovery/discovery')
+const mine = () => import('../views/mine/mine')
+const movie = () => import('../views/movie/movie')
+const town = () => import('../views/town/town')
+const songSheet = () => import('../views/songSheet/songSheet')
 Vue.use(VueRouter)
 
 const routes = [
   {
     path: '/discovery',
-    component: discovery
+    component: discovery,
+    meta: {
+      headerShow: true
+    }
   },
   {
     path: '/mine',
-    component: mine
+    component: mine,
+    meta: {
+      headerShow: true
+    }
   },
   {
     path: '/movie',
-    component: movie
+    component: movie,
+    meta: {
+      headerShow: true
+    }
   },
   {
     path: '/town',
-    component: town
+    component: town,
+    meta: {
+      headerShow: true
+    }
+  }, {
+    path: '/songSheet/:id',
+    component: songSheet
+
   },
   {
     path: '/',

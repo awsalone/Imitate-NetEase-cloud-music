@@ -180,9 +180,3 @@ body {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-
-/*图标字体*/
-.iconfont {
-  color: red;
-  font-size: 25px;
-}
