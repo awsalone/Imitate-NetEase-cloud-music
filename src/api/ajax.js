@@ -6,7 +6,7 @@ export default function ajax (url, data = {}, type = 'GET') {
     if (type === 'GET') {
       let datastr = ''
       Object.keys(data).forEach(key => {
-        datastr += key + data[key] + '&'
+        datastr += key + '=' + data[key] + '&'
       })
       if (datastr !== '') {
         datastr = datastr.substring(0, datastr.lastIndexOf('&'))

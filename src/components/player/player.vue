@@ -32,6 +32,7 @@ export default {
   width: 100%;
   display: flex;
   justify-content: space-between;
+  background-color: #fff;
 
   .musicInfo {
     display: flex;

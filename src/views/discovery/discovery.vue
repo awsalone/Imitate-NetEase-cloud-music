@@ -121,12 +121,11 @@
       </div>
     </div>
     <!--播放显示-->
-    <Player></Player>
   </div>
 </template>
 <script>
 /* eslint-disable no-new */
-import Player from '../../components/player/player'
+
 import { reqBanner, reqRecSongSheet } from '../../api/index'
 import { Swipe, SwipeItem } from 'vant'
 import BScroll from 'better-scroll'
@@ -138,7 +137,7 @@ export default {
     }
   },
   components: {
-    Player,
+
     [Swipe.name]: Swipe,
     [SwipeItem.name]: SwipeItem
   },

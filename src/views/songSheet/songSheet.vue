@@ -1,48 +1,52 @@
 <template>
-  <div class="container">
+  <div class="container" v-if="songSheetList" ref="box">
     <!--标题-->
-    <header>
-      <div class="left">
-        <span>
-          <i class="iconfont icon-jiantou3" style="font-size:20px"></i>
-        </span>
-        <span>歌单</span>
-      </div>
-      <div class="right">
-        <span>
-          <i class="iconfont icon-icon-" style="font-size:25px"></i>
-        </span>
-        <span>
-          <i class="iconfont icon-gengduo" style="font-size:25px"></i>
-        </span>
+    <header class="clearFix">
+      <div class="headerContain">
+        <div class="left">
+          <span>
+            <i class="iconfont icon-jiantou3" style="font-size:20px"></i>
+          </span>
+          <span>歌单</span>
+        </div>
+        <div class="right">
+          <span>
+            <i class="iconfont icon-icon-" style="font-size:25px"></i>
+          </span>
+          <span>
+            <i class="iconfont icon-gengduo" style="font-size:25px"></i>
+          </span>
+        </div>
       </div>
     </header>
     <!--头部-->
     <div class="title">
       <div class="top">
-        <div class="pic"></div>
+        <div class="pic">
+          <img :src="songSheetList.playlist.coverImgUrl" />
+        </div>
         <div class="des">
-          <div class="name">111</div>
-          <div class="author">222</div>
-          <div class="description">333</div>
+          <div class="name">{{songSheetList.playlist.name}}</div>
+          <div class="author"></div>
+          <div class="description">{{songSheetList.playlist.description}}</div>
         </div>
       </div>
       <div class="bottom">
         <span class="vertical">
           <i class="iconfont icon-pinglun"></i>
-          <span></span>
+          <span class="verticalText">{{songSheetList.playlist.commentCount}}</span>
         </span>
         <span class="vertical">
           <i class="iconfont icon-fenxiang"></i>
-          <span></span>
+          <span class="verticalText">{{songSheetList.playlist.shareCount}}</span>
         </span>
         <span class="vertical">
           <i class="iconfont icon-xiazai"></i>
-          <span>下载</span>
+          <span class="verticalText">下载</span>
         </span>
         <span class="vertical">
           <i class="iconfont icon-duoxuan"></i>
-          <span>多选</span>
+          <span class="verticalText">多选</span>
         </span>
       </div>
     </div>
@@ -54,20 +58,20 @@
         </span>
         <span>
           播放全部
-          <span>（共1首）</span>
+          <span>（共{{songSheetList.playlist.trackCount}}首）</span>
         </span>
       </div>
-      <div class="playerHeadR">+&nbsp;收藏(1111)</div>
+      <div class="playerHeadR">+&nbsp;收藏({{songSheetList.playlist.subscribedCount}})</div>
     </div>
     <!-- 歌曲部分 -->
     <div class="songList">
       <ul>
-        <li class="songItem">
+        <li class="songItem" v-for="(item, index) in songDetail" :key="index">
           <div class="songItemL">
-            <div class="index"></div>
+            <div class="index">{{index+1}}</div>
             <div class="musicName">
-              <span class="name">残酷月光12313</span>
-              <span class="author">林宥嘉</span>
+              <span class="name">{{item.name}}</span>
+              <span class="author">{{item.al.name}}</span>
             </div>
           </div>
           <div class="songItemR">
@@ -79,55 +83,107 @@
   </div>
 </template>
 <script>
-import { reqSongSheetDetail } from '../../api/index'
+import { reqSongSheetDetail, reqSongUrl, reqSongDetail } from '../../api/index'
 export default {
   data () {
     return {
-      songSheetList: []
+      songSheetList: '',
+      songListUrl: [],
+      songDetail: []
     }
   },
   methods: {
     async getSongSheetDetail () {
       const result = await reqSongSheetDetail(this.$route.params.id)
       this.songSheetList = result
+    },
+    async getSongUrl () {
+      const result = await reqSongUrl({ id: this.songSheetListId })
+      this.songListUrl = result.data
+    },
+    async getSongDetail () {
+      const result = await reqSongDetail({ ids: this.songSheetListId })
+      this.songDetail = result.songs
     }
   },
-  mounted () {
+  computed: {
+    songSheetListId () {
+      const list = []
+      this.songSheetList.playlist.trackIds.forEach(item => {
+        list.push(item.id)
+      })
+      return list.join(',')
+    },
+    pageScroll () {
+      const longth = document.documentElement.scrollTop || document.body.scrollTop
+      return longth
+    }
+  },
+  created () {
     this.getSongSheetDetail()
   },
+  mounted () {
+    window.addEventListener('scroll', () => {
+      console.log(111)
+    })
+  },
   beforeRouteUpdate (to, from, next) {
+    this.getSongSheetDetail()
     next()
+  },
+  watch: {
+    songSheetList () {
+      this.getSongUrl()
+      this.getSongDetail()
+    }
   }
 }
 </script>
 <style lang="scss">
+.clearFix {
+  &::after,
+  &::before {
+    display: block;
+    content: '';
+    height: 0;
+    clear: both;
+    visibility: hidden;
+    overflow: hidden;
+  }
+}
 .container {
   // 标题
   header {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    font-size: 18px;
-    align-items: center;
-    .left {
-      span {
-        padding: 0 10px;
+    .headerContain {
+      width: 100%;
+      height: 70px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 18px;
+      align-items: center;
+      z-index: 1;
+      position: fixed;
+      .left {
+        span {
+          padding: 0 10px;
+        }
       }
-    }
-    .right {
-      span {
-        padding: 0 10px;
+      .right {
+        span {
+          padding: 0 10px;
+        }
       }
     }
   }
   // 头部
   .title {
     height: 200px;
+    width: 100%;
     .top {
       display: flex;
 
       .pic {
-        background-color: #aaa;
+        flex: 0 0 auto;
         width: 100px;
         height: 100px;
         padding: 15px;
@@ -142,6 +198,11 @@ export default {
         margin: 15px;
         .description {
           margin-top: 30px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          height: 20px;
+          width: 150px;
+          white-space: nowrap;
         }
       }
     }
@@ -152,6 +213,9 @@ export default {
       .vertical {
         display: flex;
         flex-direction: column;
+        .verticalText {
+          text-align: center;
+        }
       }
     }
     i {
@@ -161,7 +225,11 @@ export default {
   }
   // 脱离定位部分
   .playerHead {
+    .active {
+      position: fixed;
+    }
     height: 60px;
+    width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -191,6 +259,7 @@ export default {
   }
   // 歌曲列表
   .songList {
+    width: 100%;
     .songItem {
       height: 45px;
       line-height: 45px;
