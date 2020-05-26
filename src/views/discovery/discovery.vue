@@ -179,6 +179,7 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-top: 70px;
   .iconfont {
     color: red;
     font-size: 25px;
@@ -360,8 +361,11 @@ export default {
         }
       }
     }
+    &::after {
+      display: block;
+      height: 70px;
+      content: '';
+    }
   }
-
-  /*底部音乐播放*/
 }
 </style>

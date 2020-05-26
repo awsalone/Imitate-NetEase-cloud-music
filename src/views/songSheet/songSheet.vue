@@ -1,14 +1,16 @@
 <template>
   <div class="container" v-if="songSheetList" ref="box">
     <!--标题-->
-    <header class="clearFix">
-      <div class="headerContain">
+    <HeaderTop class="headerContain">
+      <template #left>
         <div class="left">
-          <span>
+          <span @click="$router.go(-1)">
             <i class="iconfont icon-jiantou3" style="font-size:20px"></i>
           </span>
           <span>歌单</span>
         </div>
+      </template>
+      <template #right>
         <div class="right">
           <span>
             <i class="iconfont icon-icon-" style="font-size:25px"></i>
@@ -17,8 +19,8 @@
             <i class="iconfont icon-gengduo" style="font-size:25px"></i>
           </span>
         </div>
-      </div>
-    </header>
+      </template>
+    </HeaderTop>
     <!--头部-->
     <div class="title">
       <div class="top">
@@ -51,7 +53,7 @@
       </div>
     </div>
     <!-- 脱离定位部分 -->
-    <div class="playerHead">
+    <div class="playerHead" :class="{active:scrollState}">
       <div class="playerHeadL">
         <span class="playerIcon">
           <i class="iconfont icon-bofang_bg"></i>
@@ -84,13 +86,18 @@
 </template>
 <script>
 import { reqSongSheetDetail, reqSongUrl, reqSongDetail } from '../../api/index'
+import HeaderTop from '../../components/headerTop/headerTop'
 export default {
   data () {
     return {
       songSheetList: '',
       songListUrl: [],
-      songDetail: []
+      songDetail: [],
+      scrollState: ''
     }
+  },
+  components: {
+    HeaderTop
   },
   methods: {
     async getSongSheetDetail () {
@@ -113,10 +120,6 @@ export default {
         list.push(item.id)
       })
       return list.join(',')
-    },
-    pageScroll () {
-      const longth = document.documentElement.scrollTop || document.body.scrollTop
-      return longth
     }
   },
   created () {
@@ -124,7 +127,12 @@ export default {
   },
   mounted () {
     window.addEventListener('scroll', () => {
-      console.log(111)
+      const top = document.documentElement.scrollTop || document.body.scrollTop
+      if (top >= 200) {
+        this.scrollState = true
+      } else {
+        this.scrollState = false
+      }
     })
   },
   beforeRouteUpdate (to, from, next) {
@@ -140,38 +148,26 @@ export default {
 }
 </script>
 <style lang="scss">
-.clearFix {
-  &::after,
-  &::before {
-    display: block;
-    content: '';
-    height: 0;
-    clear: both;
-    visibility: hidden;
-    overflow: hidden;
-  }
-}
 .container {
   // 标题
-  header {
-    .headerContain {
-      width: 100%;
-      height: 70px;
-      display: flex;
-      justify-content: space-between;
-      font-size: 18px;
-      align-items: center;
-      z-index: 1;
-      position: fixed;
-      .left {
-        span {
-          padding: 0 10px;
-        }
+  .headerContain {
+    top: 0;
+    width: 100%;
+    height: 70px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 18px;
+    align-items: center;
+    z-index: 1;
+    position: fixed;
+    .left {
+      span {
+        padding: 0 10px;
       }
-      .right {
-        span {
-          padding: 0 10px;
-        }
+    }
+    .right {
+      span {
+        padding: 0 10px;
       }
     }
   }
@@ -179,6 +175,7 @@ export default {
   .title {
     height: 200px;
     width: 100%;
+    margin-top: 70px;
     .top {
       display: flex;
 
@@ -213,6 +210,7 @@ export default {
       .vertical {
         display: flex;
         flex-direction: column;
+        text-align: center;
         .verticalText {
           text-align: center;
         }
@@ -225,8 +223,9 @@ export default {
   }
   // 脱离定位部分
   .playerHead {
-    .active {
+    &.active {
       position: fixed;
+      top: 70px;
     }
     height: 60px;
     width: 100%;
@@ -270,6 +269,9 @@ export default {
         display: flex;
         .index {
           width: 40px;
+          height: 45px;
+          line-height: 45px;
+          text-align: center;
         }
         .musicName {
           display: flex;
@@ -296,6 +298,12 @@ export default {
       .songItemR {
         vertical-align: middle;
       }
+    }
+    // 占位
+    &::after {
+      display: block;
+      height: 70px;
+      content: '';
     }
   }
 }
