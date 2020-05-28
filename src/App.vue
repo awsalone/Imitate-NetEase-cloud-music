@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <!--标题头部-->
-    <HeaderTop v-show="this.$route.meta.headerShow" class="headerTop">
+    <HeaderTop v-if="this.$route.meta.headerShow" class="headerTop">
       <template #left>
         <i class="iconfont icon-caidan_bg menu"></i>
       </template>
@@ -31,7 +31,7 @@
       </template>
     </HeaderTop>
     <router-view></router-view>
-    <Player></Player>
+    <Player v-if="!this.$route.meta.playerShowHide"></Player>
   </div>
 </template>
 <script>

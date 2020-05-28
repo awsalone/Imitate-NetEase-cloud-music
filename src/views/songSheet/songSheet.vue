@@ -66,14 +66,19 @@
       <div class="playerHeadR">+&nbsp;收藏({{songSheetList.playlist.subscribedCount}})</div>
     </div>
     <!-- 歌曲部分 -->
-    <div class="songList">
+    <div class="songList" :class="{active:scrollState}">
       <ul>
-        <li class="songItem" v-for="(item, index) in songDetail" :key="index">
+        <li
+          class="songItem"
+          v-for="(item, index) in songDetail"
+          :key="index"
+          @click="$router.push({path:`/playerlist/${item.id}`})"
+        >
           <div class="songItemL">
             <div class="index">{{index+1}}</div>
             <div class="musicName">
               <span class="name">{{item.name}}</span>
-              <span class="author">{{item.al.name}}</span>
+              <span class="author">{{item.ar[0].name}}</span>
             </div>
           </div>
           <div class="songItemR">
@@ -85,7 +90,7 @@
   </div>
 </template>
 <script>
-import { reqSongSheetDetail, reqSongUrl, reqSongDetail } from '../../api/index'
+import { reqSongSheetDetail, reqSongDetail } from '../../api/index'
 import HeaderTop from '../../components/headerTop/headerTop'
 export default {
   data () {
@@ -100,14 +105,12 @@ export default {
     HeaderTop
   },
   methods: {
+    // 歌单
     async getSongSheetDetail () {
       const result = await reqSongSheetDetail(this.$route.params.id)
       this.songSheetList = result
     },
-    async getSongUrl () {
-      const result = await reqSongUrl({ id: this.songSheetListId })
-      this.songListUrl = result.data
-    },
+    // 歌曲详情
     async getSongDetail () {
       const result = await reqSongDetail({ ids: this.songSheetListId })
       this.songDetail = result.songs
@@ -141,7 +144,6 @@ export default {
   },
   watch: {
     songSheetList () {
-      this.getSongUrl()
       this.getSongDetail()
     }
   }
@@ -149,13 +151,10 @@ export default {
 </script>
 <style lang="scss">
 .container {
+  margin-top: 70px;
   // 标题
   .headerContain {
     top: 0;
-    width: 100%;
-    height: 70px;
-    display: flex;
-    justify-content: space-between;
     font-size: 18px;
     align-items: center;
     z-index: 1;
@@ -175,7 +174,7 @@ export default {
   .title {
     height: 200px;
     width: 100%;
-    margin-top: 70px;
+
     .top {
       display: flex;
 
@@ -259,6 +258,9 @@ export default {
   // 歌曲列表
   .songList {
     width: 100%;
+    &.active {
+      margin-top: 60px;
+    }
     .songItem {
       height: 45px;
       line-height: 45px;

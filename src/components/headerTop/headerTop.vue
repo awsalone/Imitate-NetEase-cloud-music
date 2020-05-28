@@ -21,13 +21,5 @@ header {
   justify-content: space-between;
   align-items: center;
   background-color: #fff;
-
-  .left {
-    margin: 10px;
-  }
-
-  .right {
-    margin: 10px;
-  }
 }
 </style>
