@@ -6,7 +6,7 @@ export default {
     const result = await reqSongDetail(id)
     if (result.code === 200) {
       const song = result.songs[0]
-      commit(RECEIVE_SONGS, { song })
+      commit(RECEIVE_SONGS, { song, id })
     }
   },
   async getSongUrl ({ commit }, id) {

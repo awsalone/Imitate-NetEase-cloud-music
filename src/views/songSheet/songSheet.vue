@@ -129,6 +129,7 @@ export default {
     this.getSongSheetDetail()
   },
   mounted () {
+    // fixed
     window.addEventListener('scroll', () => {
       const top = document.documentElement.scrollTop || document.body.scrollTop
       if (top >= 200) {
