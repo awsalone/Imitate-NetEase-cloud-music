@@ -1,6 +1,7 @@
 <template>
   <div class="contain">
-    <HeaderTop>
+    <div class="background" :style="{backgroundImage:songPic}"></div>
+    <HeaderTop style="backgroundColor:rgba(0,0,0,0)">
       <template #left>
         <div class="leftContain">
           <span @click="$router.go(-1)">
@@ -18,6 +19,11 @@
         </div>
       </template>
     </HeaderTop>
+    <div class="songContainer">
+      <div class="songPic">
+        <div class="pic active" :style="{backgroundImage: songPic}" :class="{pause:playState}"></div>
+      </div>
+    </div>
     <div class="player">
       <audio :src="songUrl" ref="songPlayer" id="songPlayer" autoplay></audio>
 
@@ -67,12 +73,13 @@ export default {
   data () {
     return {
       songAuthor: '', // 作者
+      songPic: '',
       lyric: {},
       cTime: '',
       dTime: '',
-      playState: false,
+      playMode: '',
+      playState: false, // false暂停 true播放
       show: false, // 弹出层
-      playMode: 0,
       id: ''
     }
   },
@@ -103,17 +110,21 @@ export default {
       this.lyric = result
     },
     // 初始化
-    init () {
-      this.$store.dispatch('getSongDetail', { ids: this.$route.params.id })
-      this.$store.dispatch('getSongUrl', { id: this.$route.params.id })
-      this.id = this.$route.params.id
+    init (id) {
+      this.$store.dispatch('getSongDetail', { ids: id })
+      this.$store.dispatch('getSongUrl', { id: id })
+
       // 获取时长
       this.$refs.songPlayer.oncanplay = () => {
         this.dTime = this.$refs.songPlayer.duration
         this.cTime = this.$refs.songPlayer.currentTime
       }
+      this.$refs.songPlayer.onended = () => {
+        this.nextSong()
+      }
       clearInterval(this._inner)
       this.interval()
+      this.playMode = this.playModeNum
     },
     // 切换播放状态
     togglePlayState () {
@@ -152,33 +163,36 @@ export default {
     // 下一首
     nextSong () {
       const that = this
-      const index = this.playList.findIndex((item) => {
+      const index = this.playListMode.findIndex((item) => {
         return item.id === that.songDetail.id
       })
       let songId = null
-      if (this.playList.length > index + 1) {
-        songId = this.playList[index + 1].id
+      if (that.playList.length === 1) {
+        songId = this.playListMode[0].id
+        that.$refs.songPlayer.currentTime = 0
+      } else if (this.playListMode.length > index + 1) {
+        songId = this.playListMode[index + 1].id
       } else {
-        songId = this.playList[0].id
+        songId = this.playListMode[0].id
+        that.$refs.songPlayer.currentTime = 0
       }
       this.id = songId
       this.playState = false
       clearInterval(this._inner)
-
       this.interval()
     },
     // 上一首
     preSong () {
       const that = this
-      const length = that.playList.length
-      const index = this.playList.findIndex((item) => {
+      const length = that.playListMode.length
+      const index = this.playListMode.findIndex((item) => {
         return item.id === that.songDetail.id
       })
       let songId = null
       if (index > 0) {
-        songId = this.playList[index - 1].id
+        songId = this.playListMode[index - 1].id
       } else {
-        songId = this.playList[length - 1].id
+        songId = this.playListMode[length - 1].id
       }
       this.id = songId
       this.playState = false
@@ -188,25 +202,36 @@ export default {
 
   },
   computed: {
-    ...mapState(['songDetail', 'songUrl', 'playList']),
+    ...mapState(['songDetail', 'songUrl', 'playList', 'playModeNum']),
     progressWidth: function () {
       return this.cTime / this.dTime * 100 + '%'
+    },
+    // 根据播放模式改变播放列表排序
+    playListMode: function () {
+      let arr = []
+      if (this.playMode === 0) {
+        arr = this.playList
+      } else if (this.playMode === 1) {
+        // 随机
+        arr = this.playList
+        const length = this.playList.length
+        for (var i = 0; i < length; i++) {
+          var index = Math.floor(Math.random() * (i + 1))
+            ;[arr[i], arr[index]] = [arr[index], arr[i]]
+        }
+      } else if (this.playMode === 2) {
+        arr = [this.songDetail]
+      }
+      this.$store.commit('receive_playMode', { num: this.playMode })
+      return arr
     }
-    // playListMode: function () {
-    //   const arr = []
-    //   if (this.playMode === 0){
-    //     arr = this.playList
-    //   }else if (this.playMode === 1){
-
-    //   }
-    //   return arr
-    // }
   },
 
   watch: {
     // 获取歌曲歌手名
     songDetail: function () {
       this.songAuthor = this.songDetail.ar[0].name
+      this.songPic = `url(${this.songDetail.al.picUrl})`
     },
     // 播放状态设置清除定时器
     playState: function () {
@@ -223,24 +248,37 @@ export default {
     },
     // 监听页面内id变化重新渲染
     id: function () {
-      this.$store.dispatch('getSongDetail', { ids: this.id })
-      this.$store.dispatch('getSongUrl', { id: this.id })
-      this.$refs.songPlayer.oncanplay = () => {
-        this.dTime = this.$refs.songPlayer.duration
-        this.cTime = this.$refs.songPlayer.currentTime
-      }
-      clearInterval(this._inner)
-      this.interval()
+      this.init(this.id)
     }
   },
   mounted () {
     this.getLyric()
-    this.init()
+    this.id = this.$route.params.id
+    this.init(this.id)
   }
 }
 </script>
 <style lang="scss">
+@keyframes rotatePic {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
 .contain {
+  height: 100%;
+  .background {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    filter: blur(50px);
+    z-index: -1;
+  }
   .leftContain {
     display: flex;
     align-items: center;
@@ -257,6 +295,35 @@ export default {
   }
   .rightContain {
     margin: 0 10px;
+  }
+  .songContainer {
+    display: flex;
+    .songPic {
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: rgba(224, 221, 221, 0.5);
+      position: absolute;
+      top: 30%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+
+      .pic {
+        width: 200px;
+        height: 200px;
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        border-radius: 50%;
+        background-size: 100% 100%;
+        &.active {
+          animation: rotatePic 20s linear infinite;
+        }
+        &.pause {
+          animation-play-state: paused;
+        }
+      }
+    }
   }
   .player {
     position: absolute;

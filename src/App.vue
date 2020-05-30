@@ -45,32 +45,35 @@ export default {
 }
 </script>
 <style lang='scss'>
-.headerTop {
-  position: fixed;
-  top: 0;
-  z-index: 2;
-  .headernav {
-    display: flex;
-    flex: 1 1 auto;
-    align-items: center;
-    justify-content: space-around;
-    background-color: #fff;
-    .router-link-active {
-      font-size: 25px;
-      color: black;
-    }
-    // 没效果，之后再调整
-    .bigger-enter-active,
-    .bigger-leave-active {
-      transition: all 5s ease;
-    }
-    .bigger-enter,
-    .bigger-leave-to {
-      color: #7e8c8d;
-      font-size: 16px;
-      background-color: red;
-      transform: translateX(10px);
-      opacity: 0;
+#app {
+  height: 100%;
+  .headerTop {
+    position: fixed;
+    top: 0;
+    z-index: 2;
+    .headernav {
+      display: flex;
+      flex: 1 1 auto;
+      align-items: center;
+      justify-content: space-around;
+      background-color: #fff;
+      .router-link-active {
+        font-size: 25px;
+        color: black;
+      }
+      // 没效果，之后再调整
+      .bigger-enter-active,
+      .bigger-leave-active {
+        transition: all 5s ease;
+      }
+      .bigger-enter,
+      .bigger-leave-to {
+        color: #7e8c8d;
+        font-size: 16px;
+        background-color: red;
+        transform: translateX(10px);
+        opacity: 0;
+      }
     }
   }
 }
