@@ -19,7 +19,7 @@
       </template>
     </HeaderTop>
     <div class="player">
-      <audio :src="songUrl" ref="songPlayer" id="songPlayer"></audio>
+      <audio :src="songUrl" ref="songPlayer" id="songPlayer" autoplay></audio>
 
       <div id="songProgress">
         <span>{{cTime | songTime}}</span>
@@ -34,15 +34,15 @@
           <i class="iconfont icon-suiji" :class="{active: playMode == 1}"></i>
           <i class="iconfont icon-danquxunhuan" :class="{active: playMode == 2}"></i>
         </div>
-        <div id="playBack">
+        <div id="playBack" @click="preSong">
           <i class="iconfont icon-skip--back"></i>
         </div>
         <div id="playState" @click="togglePlayState">
-          <i class="iconfont icon-play" :class="{active:!playState}"></i>
-          <i class="iconfont icon-pause" :class="{active:playState}"></i>
+          <i class="iconfont icon-play" :class="{active:playState}"></i>
+          <i class="iconfont icon-pause" :class="{active:!playState}"></i>
         </div>
-        <div id="playForward">
-          <i class="iconfont icon-skip--forward" @click="nextSong"></i>
+        <div id="playForward" @click="nextSong">
+          <i class="iconfont icon-skip--forward"></i>
         </div>
         <div id="playMenu" @click="toggleShow">
           <i class="iconfont icon-caidan"></i>
@@ -72,7 +72,8 @@ export default {
       dTime: '',
       playState: false,
       show: false, // 弹出层
-      playMode: 0
+      playMode: 0,
+      id: ''
     }
   },
   components: {
@@ -105,19 +106,23 @@ export default {
     init () {
       this.$store.dispatch('getSongDetail', { ids: this.$route.params.id })
       this.$store.dispatch('getSongUrl', { id: this.$route.params.id })
+      this.id = this.$route.params.id
       // 获取时长
       this.$refs.songPlayer.oncanplay = () => {
         this.dTime = this.$refs.songPlayer.duration
         this.cTime = this.$refs.songPlayer.currentTime
       }
+      clearInterval(this._inner)
+      this.interval()
     },
     // 切换播放状态
     togglePlayState () {
       this.playState = !this.playState
-      if (this.playState) {
-        this.$refs.songPlayer.play()
+      const audio = this.$refs.songPlayer
+      if (!this.playState) {
+        audio.play()
       } else {
-        this.$refs.songPlayer.pause()
+        audio.pause()
       }
     },
     // 播放时间定时器
@@ -143,8 +148,6 @@ export default {
       } else {
         this.playMode = 0
       }
-      const index = this.playList.indexOf(this.songDetail)
-      console.log(index)
     },
     // 下一首
     nextSong () {
@@ -158,14 +161,31 @@ export default {
       } else {
         songId = this.playList[0].id
       }
-      this.$store.dispatch('getSongDetail', { ids: songId })
-      this.$store.dispatch('getSongUrl', { id: songId })
-      console.log(this.$refs.songPlayer)
-      this.$nextTick(() => {
-        this.$refs.songPlayer.load()
-        this.$refs.songPlayer.play()
+      this.id = songId
+      this.playState = false
+      clearInterval(this._inner)
+
+      this.interval()
+    },
+    // 上一首
+    preSong () {
+      const that = this
+      const length = that.playList.length
+      const index = this.playList.findIndex((item) => {
+        return item.id === that.songDetail.id
       })
+      let songId = null
+      if (index > 0) {
+        songId = this.playList[index - 1].id
+      } else {
+        songId = this.playList[length - 1].id
+      }
+      this.id = songId
+      this.playState = false
+      clearInterval(this._inner)
+      this.interval()
     }
+
   },
   computed: {
     ...mapState(['songDetail', 'songUrl', 'playList']),
@@ -184,32 +204,38 @@ export default {
   },
 
   watch: {
+    // 获取歌曲歌手名
     songDetail: function () {
       this.songAuthor = this.songDetail.ar[0].name
     },
+    // 播放状态设置清除定时器
     playState: function () {
-      if (this.playState === true) {
+      clearInterval(this._inner)
+      if (this.playState === false) {
         this.interval()
       } else {
         clearInterval(this._inner)
       }
+    },
+    // 动态路由参数改变的渲染
+    $route (to, from) {
+      this.init()
+    },
+    // 监听页面内id变化重新渲染
+    id: function () {
+      this.$store.dispatch('getSongDetail', { ids: this.id })
+      this.$store.dispatch('getSongUrl', { id: this.id })
+      this.$refs.songPlayer.oncanplay = () => {
+        this.dTime = this.$refs.songPlayer.duration
+        this.cTime = this.$refs.songPlayer.currentTime
+      }
+      clearInterval(this._inner)
+      this.interval()
     }
   },
   mounted () {
     this.getLyric()
     this.init()
-    // this.$nextTick(() => {
-    //   console.log(this.$refs.songPlayer.duration)
-    // })
-  },
-
-  updated () {
-  },
-  beforeRouteUpdate (to, from, next) {
-    this.getSongUrl()
-    this.getSongDetail()
-    this.getLyric()
-    next()
   }
 }
 </script>
