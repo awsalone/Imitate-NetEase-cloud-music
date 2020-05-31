@@ -1,4 +1,4 @@
-import { RECEIVE_SONGS, RECEIVE_SONGURL, RECEIVE_PLAYMODE } from './mutation-type'
+import { RECEIVE_SONGS, RECEIVE_SONGURL, RECEIVE_PLAYMODE, DELETE_PLAYLIST, DELETE_SONG } from './mutation-type'
 
 export default {
   [RECEIVE_SONGS] (state, { song }) {
@@ -13,5 +13,14 @@ export default {
   },
   [RECEIVE_PLAYMODE] (state, { num }) {
     state.playModeNum = num
+  },
+  [DELETE_PLAYLIST] (state) {
+    state.playList = []
+  },
+  [DELETE_SONG] (state, { id }) {
+    const index = state.playList.findIndex(item => {
+      return item.id === id
+    })
+    state.playList.splice(index, 1)
   }
 }

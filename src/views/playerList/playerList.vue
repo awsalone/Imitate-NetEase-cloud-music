@@ -1,6 +1,8 @@
 <template>
   <div class="contain">
+    <!-- 背景 -->
     <div class="background" :style="{backgroundImage:songPic}"></div>
+    <!-- 头部 -->
     <HeaderTop style="backgroundColor:rgba(0,0,0,0)">
       <template #left>
         <div class="leftContain">
@@ -19,11 +21,15 @@
         </div>
       </template>
     </HeaderTop>
-    <div class="songContainer">
+    <!-- cd转盘 -->
+    <div class="songContainer" v-show="middleShow" @click="middleShow = !middleShow">
       <div class="songPic">
         <div class="pic active" :style="{backgroundImage: songPic}" :class="{pause:playState}"></div>
       </div>
     </div>
+    <!-- 歌词 -->
+    <div class="lyricContain" v-show="!middleShow" @click="middleShow = !middleShow"></div>
+    <!-- 底部播放器 -->
     <div class="player">
       <audio :src="songUrl" ref="songPlayer" id="songPlayer" autoplay></audio>
 
@@ -35,7 +41,7 @@
         <span>{{dTime | songTime }}</span>
       </div>
       <div id="songControls">
-        <div id="playMode" @click="togglePlayMode">
+        <div class="playMode" @click="togglePlayMode">
           <i class="iconfont icon-xunhuan" :class="{active: playMode == 0}"></i>
           <i class="iconfont icon-suiji" :class="{active: playMode == 1}"></i>
           <i class="iconfont icon-danquxunhuan" :class="{active: playMode == 2}"></i>
@@ -55,9 +61,30 @@
         </div>
       </div>
     </div>
-    <van-popup v-model="show" position="bottom" round style="height:50%">
+    <van-popup v-model="show" position="bottom" round style="height:50%" class="popup">
+      <div class="popupTitle">当前播放（{{playList.length}}）</div>
+      <div class="popupControl">
+        <div class="popupControlL">
+          <span>
+            <div class="playMode" @click="togglePlayMode">
+              <i class="iconfont icon-xunhuan" :class="{active: playMode == 0}"></i>
+              <i class="iconfont icon-suiji" :class="{active: playMode == 1}"></i>
+              <i class="iconfont icon-danquxunhuan" :class="{active: playMode == 2}"></i>
+            </div>
+          </span>
+          <span>{{playMode ===0? '列表循环': playMode ===1 ? '随机播放' : '单曲循环'}}</span>
+        </div>
+        <div class="popupControlR" @click="deleteSongList">
+          <i class="iconfont icon-huishouzhan_huaban"></i>
+        </div>
+      </div>
       <ul>
-        <li v-for="(item,index) in playList" :key="index">{{item.name}}</li>
+        <li v-for="(item,index) in playList" :key="index" class="popupLi">
+          <span class="popupName">{{item.name}}</span>
+          <span @click="deleteSong(item.id)">
+            <i class="iconfont icon-guanbi"></i>
+          </span>
+        </li>
       </ul>
     </van-popup>
   </div>
@@ -80,6 +107,7 @@ export default {
       playMode: '',
       playState: false, // false暂停 true播放
       show: false, // 弹出层
+      middleShow: true, // true cd播放 false 歌词界面
       id: ''
     }
   },
@@ -198,6 +226,14 @@ export default {
       this.playState = false
       clearInterval(this._inner)
       this.interval()
+    },
+    // 清空播放列表
+    deleteSongList () {
+      this.$store.commit('delete_playList')
+      this.show = false
+    },
+    deleteSong (id) {
+      this.$store.commit('delete_song', { id: id })
     }
 
   },
@@ -244,11 +280,16 @@ export default {
     },
     // 动态路由参数改变的渲染
     $route (to, from) {
-      this.init()
+      this.init(this.$route.params.id)
     },
     // 监听页面内id变化重新渲染
     id: function () {
       this.init(this.id)
+    },
+    playList: function () {
+      if (!this.playList.length) {
+        this.show = false
+      }
     }
   },
   mounted () {
@@ -365,7 +406,7 @@ export default {
       justify-content: space-around;
       align-items: center;
       margin: 0 10px;
-      #playMode {
+      .playMode {
         i {
           display: none;
         }
@@ -386,6 +427,50 @@ export default {
         .active {
           display: block;
         }
+      }
+    }
+  }
+  .popup {
+    .popupTitle {
+      margin: 15px 0 10px 10px;
+      font-size: 20px;
+    }
+    .popupControl {
+      display: flex;
+      justify-content: space-between;
+      height: 25px;
+      padding: 5px 10px;
+      .popupControlL {
+        display: flex;
+        align-items: center;
+        .playMode {
+          i {
+            display: none;
+            font-size: 30px;
+          }
+          .active {
+            display: block;
+          }
+        }
+      }
+      .popupControlR {
+        i {
+          font-size: 20px;
+        }
+      }
+    }
+    .popupLi {
+      display: flex;
+      justify-content: space-between;
+      height: 25px;
+      padding: 5px 10px;
+
+      .popupName {
+        display: block;
+        width: 250px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
     }
   }
