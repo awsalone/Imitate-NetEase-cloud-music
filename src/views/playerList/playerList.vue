@@ -79,7 +79,12 @@
         </div>
       </div>
       <ul>
-        <li v-for="(item,index) in playList" :key="index" class="popupLi">
+        <li
+          v-for="(item,index) in playList"
+          :key="index"
+          class="popupLi"
+          @click="changeSong(item.id)"
+        >
           <span class="popupName">{{item.name}}</span>
           <span @click="deleteSong(item.id)">
             <i class="iconfont icon-guanbi"></i>
@@ -234,6 +239,10 @@ export default {
     },
     deleteSong (id) {
       this.$store.commit('delete_song', { id: id })
+    },
+    changeSong (id) {
+      this.id = id
+      this.show = false
     }
 
   },
