@@ -72,7 +72,7 @@
           class="songItem"
           v-for="(item, index) in songDetail"
           :key="index"
-          @click="$router.push({path:`/playerlist/${item.id}`})"
+          @click="changeSong(item.id)"
         >
           <div class="songItemL">
             <div class="index">{{index+1}}</div>
@@ -114,6 +114,10 @@ export default {
     async getSongDetail () {
       const result = await reqSongDetail({ ids: this.songSheetListId })
       this.songDetail = result.songs
+    },
+    changeSong (id) {
+      this.$store.dispatch('getSongDetail', { ids: id })
+      this.$store.commit('receive_playState', { zt: false })
     }
   },
   computed: {

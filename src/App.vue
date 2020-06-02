@@ -31,7 +31,7 @@
       </template>
     </HeaderTop>
     <router-view></router-view>
-    <Player v-if="!this.$route.meta.playerShowHide"></Player>
+    <Player></Player>
   </div>
 </template>
 <script>
