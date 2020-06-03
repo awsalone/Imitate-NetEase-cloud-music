@@ -12,3 +12,5 @@ export const reqSongDetail = (str) => ajax(`${BASE_URL}/song/detail`, str)
 export const reqSongUrl = (str) => ajax(`${BASE_URL}/song/url`, str)
 // 获取歌词
 export const reqSongLyric = (id) => ajax(`${BASE_URL}/lyric`, id)
+// 获取推荐歌曲
+export const reqrecNewSong = () => ajax(`${BASE_URL}/personalized/newsong`)

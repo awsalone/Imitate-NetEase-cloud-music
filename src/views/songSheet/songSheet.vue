@@ -274,6 +274,7 @@ export default {
       padding: 5px;
       .songItemL {
         display: flex;
+        width: 90%;
         .index {
           width: 40px;
           height: 45px;
@@ -284,7 +285,7 @@ export default {
           display: flex;
           flex-direction: column;
           justify-content: center;
-
+          width: 90%;
           span {
             vertical-align: middle;
           }
@@ -293,12 +294,18 @@ export default {
             font-size: 16px;
             line-height: 100%;
             margin-bottom: 5px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
           }
 
           .author {
             font-size: 12px;
             color: #ccc;
             line-height: 100%;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
           }
         }
       }

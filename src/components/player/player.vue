@@ -5,7 +5,7 @@
     <!-- 底部播放器 -->
     <div class="musicPlayer" v-if="!this.$route.meta.playerShowHide" @click="skipPlayer">
       <div class="musicInfo">
-        <div class="musicPortrait" :style="{backgroundImage: songPic}"></div>
+        <div class="musicPortrait" :style="{backgroundImage: songPic?songPic:'./img/cd.jpg'}"></div>
         <div class="musicName">
           <span class="name">{{songDetail.name}}</span>
           <span class="author">{{songAuthor}}</span>
@@ -147,12 +147,14 @@ export default {
     },
     // 切换播放状态
     togglePlayState () {
-      this.playState = !this.playState
-      const audio = this.$refs.songPlayer
-      if (!this.playState) {
-        audio.play()
-      } else {
-        audio.pause()
+      if (this.id) {
+        this.playState = !this.playState
+        const audio = this.$refs.songPlayer
+        if (!this.playState) {
+          audio.play()
+        } else {
+          audio.pause()
+        }
       }
     },
     // 播放时间定时器

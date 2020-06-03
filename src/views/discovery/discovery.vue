@@ -54,7 +54,10 @@
             @click="skipSongSheet(item.id)"
           >
             <div class="picContain">
-              <span id="triangle"></span>
+              <span id="triangle">
+                <i class="iconfont icon-play"></i>
+                {{item.playCount | count}}
+              </span>
               <div>
                 <img :src="item.picUrl" />
               </div>
@@ -73,51 +76,34 @@
       </div>
       <!--音乐列表-->
       <div class="recmmendMusic">
-        <div class="music">
-          <div class="playInfo">
-            <div class="playPortrait"></div>
-            <div class="playMusicInfo">
-              <span>
-                形容
-                <span>-沈以诚</span>
-              </span>
-              <span>xxxxxx</span>
+        <ul v-if="recNewSong">
+          <li
+            class="music"
+            v-for="(item,index) in recNewSong"
+            :key="index"
+            @click="changeSong(item.id)"
+          >
+            <div class="playInfo">
+              <div class="playPortrait">
+                <img :src="item.picUrl" />
+              </div>
+              <div class="playMusicInfo">
+                <span>{{item.name}}</span>
+                <span>-{{item.song.artists[0].name}}</span>
+              </div>
             </div>
-          </div>
-          <div class="playIcon">
-            <i class="iconfont icon-bofang_bg"></i>
-          </div>
-        </div>
-        <div class="music">
-          <div class="playInfo">
-            <div class="playPortrait"></div>
-            <div class="playMusicInfo">
-              <span>
-                形容
-                <span>-沈以诚</span>
-              </span>
-              <span>xxxxxx</span>
+            <div class="playIcon">
+              <i
+                class="iconfont icon-bofang_bg"
+                :class="{active: item.id === songDetail.id && !playStateC}"
+              ></i>
+              <i
+                class="iconfont icon-volume--up--filled"
+                :class="{active: !(item.id === songDetail.id&& !playStateC)}"
+              ></i>
             </div>
-          </div>
-          <div class="playIcon">
-            <i class="iconfont icon-bofang_bg"></i>
-          </div>
-        </div>
-        <div class="music">
-          <div class="playInfo">
-            <div class="playPortrait"></div>
-            <div class="playMusicInfo">
-              <span>
-                形容
-                <span>-沈以诚</span>
-              </span>
-              <span>xxxxxx</span>
-            </div>
-          </div>
-          <div class="playIcon">
-            <i class="iconfont icon-bofang_bg"></i>
-          </div>
-        </div>
+          </li>
+        </ul>
       </div>
     </div>
     <!--播放显示-->
@@ -126,14 +112,19 @@
 <script>
 /* eslint-disable no-new */
 
-import { reqBanner, reqRecSongSheet } from '../../api/index'
+import { reqBanner, reqRecSongSheet, reqrecNewSong } from '../../api/index'
 import { Swipe, SwipeItem } from 'vant'
 import BScroll from 'better-scroll'
+import { mapState } from 'vuex'
 export default {
   data () {
     return {
       loops: [],
-      recSongList: []
+      recSongList: [],
+      recNewSong: [],
+      playState: false,
+      curId: '', // 当前点击歌曲id
+      playStateCur: ''
     }
   },
   components: {
@@ -141,25 +132,74 @@ export default {
     [Swipe.name]: Swipe,
     [SwipeItem.name]: SwipeItem
   },
+  filters: {
+    count: function (value) {
+      let tranNumber = ''
+      const numStr = value.toString().split('.')[0]
+      if (numStr.length < 5) {
+        tranNumber = numStr
+      } else if (numStr.length < 9) {
+        tranNumber = numStr.substring(0, numStr.length - 4) + '万'
+      } else {
+        tranNumber = numStr.substring(0, numStr.length - 8) + '亿'
+      }
+      return tranNumber
+    }
+
+  },
   methods: {
+    // 获取轮播图数据
     getLoop: async function () {
       const result = await reqBanner(1)
       this.loops = result.banners
     },
+    // 获取推荐歌单数据
     getrecSongList: async function () {
       const result = await reqRecSongSheet(6)
       this.recSongList = result.result
     },
+    // 跳转歌单页面
     skipSongSheet (id) {
       this.$router.push({ path: `/songSheet/${id}` })
+    },
+    // 获取推荐歌曲
+    getrecSong: async function () {
+      const result = await reqrecNewSong()
+      this.recNewSong = result.result
+    },
+    // 点击播放
+    changeSong (id) {
+      this.curId = id
+      if (!this.songDetail || this.songDetail.id !== id) {
+        this.$store.dispatch('getSongDetail', { ids: id })
+        this.$store.commit('receive_playState', { zt: false })
+      } else {
+        this.$router.push({ path: `/playerlist/${id}` })
+      }
     }
   },
   mounted () {
     this.getLoop()
     this.getrecSongList()
+    this.getrecSong()
+    this.playState = this.playStateC
+  },
+  computed: {
+    ...mapState(['playStateC', 'songDetail', 'playStateC']),
+    active: function () {
+      let state = ''
+      if (this.curId === this.songDetail.id && !this.playStateC) {
+        state = true
+      } else {
+        state = false
+      }
+      return state
+    }
+
   },
   watch: {
     recSongList () {
+      // 轮播
       this.$nextTick(() => {
         const count = this.recSongList.length
         this.$refs.hotSheetList.style.width = 106 * count + 10 + 'px'
@@ -170,16 +210,17 @@ export default {
         })
       })
     }
+
   }
 }
 </script>
 <style lang="scss">
 .container {
-  height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   margin-top: 70px;
+  overflow: hidden;
   .iconfont {
     color: red;
     font-size: 25px;
@@ -189,10 +230,9 @@ export default {
   .loop {
     width: 300px;
     height: 100px;
-    margin-bottom: 10px;
+    margin: 10px 0;
     border-radius: 5px;
     display: flex;
-    overflow: hidden;
     .loopPic {
       width: 300px;
       height: 100px;
@@ -234,6 +274,7 @@ export default {
       }
     }
   }
+  // 推荐歌单
   .hotSheet {
     margin: 20px 0;
     width: 100%;
@@ -272,26 +313,14 @@ export default {
             border: 1px solid #ccc;
             border-radius: 5px;
             #triangle {
-              border-width: 6px 0 6px 11px;
-              width: 0;
-              height: 0;
-              border-color: transparent transparent transparent #ccc;
-              border-style: solid;
+              top: 3px;
+              right: 10%;
               position: absolute;
-              right: 20px;
-              top: 2px;
-              &::after {
-                content: '';
-                border-width: 5px 0 5px 9px;
-                left: -10.5px;
-                top: -5px;
-                width: 0;
-                height: 0;
-                border-color: transparent transparent transparent
-                  rgba(0, 0, 0, 0.5);
-                border-style: solid;
-                position: absolute;
-                z-index: 2;
+              font-size: 12px;
+              color: #ccc;
+              i {
+                font-size: 13px;
+                color: #ccc;
               }
             }
             img {
@@ -313,18 +342,10 @@ export default {
   .recmmend {
     margin-top: 10px;
     width: 100%;
-
     .recmmendWords {
       display: flex;
       justify-content: space-between;
-
-      .recmmend1 {
-        margin-left: 10px;
-      }
-
-      .recmmend2 {
-        margin-right: 10px;
-      }
+      margin: 0 10px 10px 10px;
     }
 
     .recmmendMusic {
@@ -341,23 +362,30 @@ export default {
             margin: 5px;
             width: 50px;
             height: 50px;
-            background-color: #ccc;
             border-radius: 5px;
+            overflow: hidden;
+            img {
+              width: 100%;
+              height: 100%;
+            }
           }
 
           .playMusicInfo {
             display: flex;
-            flex-direction: column;
-            justify-content: center;
-
+            align-items: center;
             span:nth-child(2) {
-              color: red;
+              margin-left: 10px;
+              color: #ccc;
+              font-size: 12px;
             }
           }
         }
 
         .playIcon {
           margin-right: 10px;
+          .active {
+            display: none;
+          }
         }
       }
     }
