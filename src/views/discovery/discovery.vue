@@ -72,7 +72,7 @@
       <!--标题-->
       <div class="recmmendWords">
         <span class="recmmend1">推荐歌曲</span>
-        <span class="recmmend2">播放全部</span>
+        <span class="recmmend2" @click="playAll(recNewSong,recNewSong[0].id)">播放全部</span>
       </div>
       <!--音乐列表-->
       <div class="recmmendMusic">
@@ -120,11 +120,10 @@ export default {
   data () {
     return {
       loops: [],
-      recSongList: [],
-      recNewSong: [],
-      playState: false,
-      curId: '', // 当前点击歌曲id
-      playStateCur: ''
+      recSongList: [], // 推荐歌单
+      recNewSong: [], // 推荐新歌
+      playState: false, // 播放状态
+      curId: '' // 当前点击歌曲id
     }
   },
   components: {
@@ -176,6 +175,11 @@ export default {
       } else {
         this.$router.push({ path: `/playerlist/${id}` })
       }
+    },
+    // 播放全部
+    playAll (list, id) {
+      this.$store.commit('play_all', { playList: list })
+      this.changeSong(id)
     }
   },
   mounted () {

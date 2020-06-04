@@ -1,7 +1,7 @@
-import { RECEIVE_SONGS, RECEIVE_SONGURL, RECEIVE_PLAYMODE, DELETE_PLAYLIST, DELETE_SONG, RECEIVE_PLAYSTATE } from './mutation-type'
+import { RECEIVE_SONGS, RECEIVE_SONGURL, RECEIVE_PLAYMODE, DELETE_PLAYLIST, DELETE_SONG, RECEIVE_PLAYSTATE, PLAY_ALL } from './mutation-type'
 
 export default {
-  // 当前播放和播放列表
+  // 当前播放和播放列表判断
   [RECEIVE_SONGS] (state, { song }) {
     if (!state.playList.find((item) => { return item.id === song.id })) {
       state.playList[state.playList.length] = song
@@ -31,5 +31,8 @@ export default {
   // 播放状态
   [RECEIVE_PLAYSTATE] (state, { zt }) {
     state.playStateC = zt
+  },
+  [PLAY_ALL] (state, { playList }) {
+    state.playList = playList
   }
 }
