@@ -219,6 +219,7 @@ export default {
 }
 </script>
 <style lang="scss">
+@import url('../../static/support.css');
 .container {
   display: flex;
   flex-direction: column;
@@ -393,11 +394,11 @@ export default {
         }
       }
     }
-    &::after {
-      display: block;
-      height: 70px;
-      content: '';
-    }
+  }
+  &::after {
+    display: block;
+    height: 70px;
+    content: '';
   }
 }
 </style>

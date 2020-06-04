@@ -1,5 +1,5 @@
 <template>
-  <div id="container">
+  <div id="container" class="border-bottom-1px">
     <audio :src="songUrl" ref="songPlayer" id="songPlayer"></audio>
 
     <!-- 底部播放器 -->
@@ -309,17 +309,19 @@ export default {
 }
 </script>
 <style lang="scss">
+@import url('../../static/support.css');
 #container {
+  position: fixed;
+  bottom: 0;
+  z-index: 1;
+  border-top: 1px solid #ccc;
+  box-sizing: border-box;
+  height: 60px;
+  line-height: 60px;
+  width: 100%;
   .musicPlayer {
-    position: fixed;
-    bottom: 0;
-    z-index: 1;
-    border-top: 1px solid #ccc;
-    box-sizing: border-box;
-    height: 60px;
-    line-height: 60px;
-    width: 100%;
     display: flex;
+
     justify-content: space-between;
     background-color: #fff;
 
