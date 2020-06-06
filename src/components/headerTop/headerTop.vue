@@ -16,10 +16,12 @@ export default {
 <style lang="scss">
 header {
   height: 70px;
-  width: 100%;
   display: flex;
+  width: 100%;
+  box-sizing: border-box;
   justify-content: space-between;
   align-items: center;
   background-color: #fff;
+  padding: 0 10px;
 }
 </style>

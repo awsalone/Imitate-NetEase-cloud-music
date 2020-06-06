@@ -13,7 +13,7 @@
 .border-top-1px::after,
 .border-left-1px::after,
 .border-right-1px::after {
-  background-color: #ccc;
+  background-color: #000;
 }
 
 /*底边边框一像素*/

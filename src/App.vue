@@ -30,7 +30,10 @@
         <i class="iconfont icon-icon- search"></i>
       </template>
     </HeaderTop>
-    <router-view></router-view>
+    <keep-alive :include="['/discovery','/mine','/movie','/town']">
+      <router-view></router-view>
+    </keep-alive>
+
     <Player></Player>
   </div>
 </template>

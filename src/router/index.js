@@ -6,6 +6,8 @@ const movie = () => import('../views/movie/movie')
 const town = () => import('../views/town/town')
 const songSheet = () => import('../views/songSheet/songSheet')
 const playerList = () => import('../views/playerList/playerList')
+const songSheetPG = () => import('../views/songSheetPG/songSheetPG')
+const songSheetView = () => import('../views/songSheetPG/songSheetView')
 Vue.use(VueRouter)
 
 const routes = [
@@ -36,16 +38,28 @@ const routes = [
     meta: {
       headerShow: true
     }
-  }, {
+  },
+  {
     path: '/songSheet/:id',
     component: songSheet
 
-  }, {
+  },
+  {
     path: '/playerList/:id',
     component: playerList,
     meta: {
       playerShowHide: true
     }
+  },
+  {
+    path: '/songSheetPG',
+    component: songSheetPG,
+    children: [
+      {
+        path: 'songSheetView/:id',
+        component: songSheetView
+      }
+    ]
   },
   {
     path: '/',

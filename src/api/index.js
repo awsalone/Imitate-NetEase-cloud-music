@@ -14,3 +14,7 @@ export const reqSongUrl = (str) => ajax(`${BASE_URL}/song/url`, str)
 export const reqSongLyric = (id) => ajax(`${BASE_URL}/lyric`, id)
 // 获取推荐歌曲
 export const reqrecNewSong = () => ajax(`${BASE_URL}/personalized/newsong`)
+// 获取歌单广场类别
+export const reqsongSheetPg = () => ajax(`${BASE_URL}/playlist/hot`)
+// 获取歌单分类数据
+export const reqsongSheetTag = (data) => ajax(`${BASE_URL}/top/playlist`, data)

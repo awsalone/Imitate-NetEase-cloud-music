@@ -20,7 +20,7 @@
         </span>
         <span>每日推荐</span>
       </span>
-      <span>
+      <span @click="$router.push('/songSheetPG')">
         <span>
           <i class="iconfont icon-icon-1"></i>
         </span>
@@ -85,7 +85,7 @@
           >
             <div class="playInfo">
               <div class="playPortrait">
-                <img :src="item.picUrl" />
+                <img v-lazy="item.picUrl" />
               </div>
               <div class="playMusicInfo">
                 <span>{{item.name}}</span>
@@ -168,12 +168,14 @@ export default {
     },
     // 点击播放
     changeSong (id) {
-      this.curId = id
-      if (!this.songDetail || this.songDetail.id !== id) {
-        this.$store.dispatch('getSongDetail', { ids: id })
-        this.$store.commit('receive_playState', { zt: false })
-      } else {
-        this.$router.push({ path: `/playerlist/${id}` })
+      if (id) {
+        this.curId = id
+        if (!this.songDetail || this.songDetail.id !== id) {
+          this.$store.dispatch('getSongDetail', { ids: id })
+          this.$store.commit('receive_playState', { zt: false })
+        } else {
+          this.$router.push({ path: `/playerlist/${id}` })
+        }
       }
     },
     // 播放全部
@@ -315,6 +317,7 @@ export default {
             position: relative;
             width: 100px;
             height: 100px;
+
             border: 1px solid #ccc;
             border-radius: 5px;
             #triangle {
@@ -338,6 +341,13 @@ export default {
             width: 100%;
             font-size: 12px;
             font-weight: 500;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+
+            -webkit-box-orient: vertical;
+
+            -webkit-line-clamp: 2;
           }
         }
       }

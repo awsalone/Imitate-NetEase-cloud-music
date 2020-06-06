@@ -1,11 +1,14 @@
 <template>
-  <div id="container" class="border-bottom-1px">
+  <div id="container">
     <audio :src="songUrl" ref="songPlayer" id="songPlayer"></audio>
-
     <!-- 底部播放器 -->
-    <div class="musicPlayer" v-if="!this.$route.meta.playerShowHide" @click="skipPlayer">
+    <div
+      class="musicPlayer border-bottom-1px"
+      v-if="!this.$route.meta.playerShowHide"
+      @click="skipPlayer"
+    >
       <div class="musicInfo">
-        <div class="musicPortrait" :style="{backgroundImage: songPic?songPic:'./img/cd.jpg'}"></div>
+        <div class="musicPortrait" :style="{backgroundImage: songPic}"></div>
         <div class="musicName">
           <span class="name">{{songDetail.name}}</span>
           <span class="author">{{songAuthor}}</span>
@@ -126,7 +129,7 @@ export default {
   methods: {
     // 初始化
     init (id) {
-      if (this.id) {
+      if (id) {
         const audio = this.$refs.songPlayer
         this.$store.dispatch('getSongDetail', { ids: id })
         this.$store.dispatch('getSongUrl', { id: id })
@@ -288,6 +291,7 @@ export default {
     id: function () {
       this.init(this.id)
       const audio = this.$refs.songPlayer
+      console.log(this.id)
       setTimeout(() => {
         if (!this.playState) {
           audio.play()
@@ -302,26 +306,22 @@ export default {
         this.show = false
       }
     }
-  },
-  mounted () {
-    this.init(this.id)
   }
 }
 </script>
 <style lang="scss">
 @import url('../../static/support.css');
 #container {
-  position: fixed;
-  bottom: 0;
-  z-index: 1;
-  border-top: 1px solid #ccc;
-  box-sizing: border-box;
-  height: 60px;
-  line-height: 60px;
-  width: 100%;
   .musicPlayer {
     display: flex;
-
+    position: fixed;
+    bottom: 0;
+    z-index: 1;
+    border-top: 1px solid #ccc;
+    box-sizing: border-box;
+    height: 60px;
+    line-height: 60px;
+    width: 100%;
     justify-content: space-between;
     background-color: #fff;
 
