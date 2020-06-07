@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <!--标题头部-->
-    <HeaderTop v-if="this.$route.meta.headerShow" class="headerTop">
+    <HeaderTop v-show="this.$route.meta.headerShow" class="headerTop" v-cloak>
       <template #left>
         <i class="iconfont icon-caidan_bg menu"></i>
       </template>
@@ -49,6 +49,9 @@ export default {
 </script>
 <style lang='scss'>
 #app {
+  [v-cloak] {
+    display: none !important;
+  }
   height: 100%;
   .headerTop {
     position: fixed;

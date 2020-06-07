@@ -41,7 +41,7 @@ export default {
 </script>
 <style lang="scss">
 .container {
-  margin: 15px 8px;
+  margin: 100px 8px 0;
   .boxcontain {
     width: 100%;
     display: grid;

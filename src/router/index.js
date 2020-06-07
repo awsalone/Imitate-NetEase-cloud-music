@@ -58,6 +58,10 @@ const routes = [
       {
         path: 'songSheetView/:id',
         component: songSheetView
+      }, {
+        path: 'songSheetView',
+        redirect: 'songSheetView/华语',
+        component: songSheetView
       }
     ]
   },

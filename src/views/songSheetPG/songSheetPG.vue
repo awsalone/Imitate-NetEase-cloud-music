@@ -3,23 +3,27 @@
     <HeaderTop>
       <template #left>
         <div class="headertop">
-          <span @click="$router.go(-1)">
+          <span @click="$router.push('/discovery')">
             <i class="iconfont icon-jiantou3" style="font-size:20px"></i>
           </span>
           <span>歌单广场</span>
         </div>
       </template>
     </HeaderTop>
-    <nav>
-      <router-link
-        class="top"
-        v-for="(item,index) in tags"
-        :key="index"
-        :class="{active:item.name === $route.params.id}"
-        :to="{ path: `/songSheetPG/songSheetView/${item.name}` }"
-      >{{item.name}}</router-link>
-    </nav>
-    <router-view></router-view>
+    <transition name="toggle">
+      <nav class="border-top-1px">
+        <router-link
+          class="top"
+          v-for="(item,index) in tags"
+          :key="index"
+          :class="{active:item.name === $route.params.id}"
+          :to="{ path: `/songSheetPG/songSheetView/${item.name}` }"
+        >{{item.name}}</router-link>
+      </nav>
+    </transition>
+    <keep-alive>
+      <router-view></router-view>
+    </keep-alive>
   </div>
 </template>
 
@@ -42,6 +46,9 @@ export default {
     async init () {
       const result = await reqsongSheetPg()
       this.tags = result.tags
+      if (!this.$route.params.id) {
+        this.$router.push('/songSheetPG/songSheetView')
+      }
     }
 
   }
@@ -55,6 +62,7 @@ export default {
   height: 100%;
   display: block;
   .headertop {
+    position: fixed;
     :nth-child(2) {
       font-size: 20px;
       align-items: center;
@@ -65,6 +73,10 @@ export default {
   nav {
     overflow: hidden;
     display: flex;
+    position: fixed;
+    background-color: #fff;
+    top: 70px;
+    padding: 5px 0;
     .top {
       flex: 0 0 auto;
       margin: 0 20px;
@@ -74,6 +86,14 @@ export default {
     }
     .active {
       border-bottom: 2px solid red;
+    }
+    .toggle-enter-active,
+    .toggle-leave-active {
+      transition: all 1s ease;
+    }
+    .toggle-enter,
+    .toggle-leave-to {
+      opacity: 0;
     }
   }
 }

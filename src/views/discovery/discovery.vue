@@ -1,6 +1,6 @@
 
 <template>
-  <div class="container">
+  <div class="containerDis">
     <!--轮播-->
     <van-swipe class="loop" :autoplay="0" indicator-color="red">
       <van-swipe-item class="loopPic" v-for="(item,index) in loops" :key="index">
@@ -222,7 +222,7 @@ export default {
 </script>
 <style lang="scss">
 @import url('../../static/support.css');
-.container {
+.containerDis {
   display: flex;
   flex-direction: column;
   align-items: center;

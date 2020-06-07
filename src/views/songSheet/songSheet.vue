@@ -156,13 +156,11 @@ export default {
 </script>
 <style lang="scss">
 .container {
-  margin-top: 70px;
   // 标题
+
   .headerContain {
-    top: 0;
     font-size: 18px;
     align-items: center;
-    z-index: 1;
     position: fixed;
     .left {
       span {
@@ -177,9 +175,9 @@ export default {
   }
   // 头部
   .title {
+    margin-top: 70px;
     height: 200px;
     width: 100%;
-
     .top {
       display: flex;
 

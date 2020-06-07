@@ -22,6 +22,8 @@ header {
   justify-content: space-between;
   align-items: center;
   background-color: #fff;
+  position: fixed;
   padding: 0 10px;
+  top: 0;
 }
 </style>
