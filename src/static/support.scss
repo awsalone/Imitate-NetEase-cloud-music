@@ -117,3 +117,11 @@ only screen and (min-resolution: 3dppx) {
     transform-origin: 0 0;
   }
 }
+
+.clearFix::after,
+.clearFix::before {
+  content: '';
+  clear: both;
+  height: 0;
+  display: block;
+}

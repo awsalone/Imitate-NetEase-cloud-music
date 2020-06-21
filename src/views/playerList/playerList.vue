@@ -22,13 +22,13 @@
       </template>
     </HeaderTop>
     <!-- cd转盘 -->
-    <div class="songContainer" v-if="middleShow" @click="middleShow = !middleShow">
-      <div class="songPic">
+    <div class="songContainer" @click="middleShow = !middleShow">
+      <div class="songPic" v-if="middleShow">
         <div class="pic active" :style="{backgroundImage: songPic}" :class="{pause:playStateC}"></div>
       </div>
+      <!-- 歌词 -->
+      <div class="lyricContain" v-else @click.stop="middleShow = !middleShow">未获取到歌词</div>
     </div>
-    <!-- 歌词 -->
-    <div class="lyricContain" v-else @click="middleShow = !middleShow">未获取到歌词</div>
     <!-- 底部播放器 -->
   </div>
 </template>
@@ -90,6 +90,7 @@ export default {
 }
 </script>
 <style lang="scss">
+@import url('../../static/support.css');
 @keyframes rotatePic {
   0% {
     transform: rotate(0deg);
@@ -158,8 +159,10 @@ export default {
   }
   .lyricContain {
     text-align: center;
-
-    height: 100%;
+    top: 70px;
+    bottom: 80px;
+    position: absolute;
+    width: 100%;
   }
 }
 </style>

@@ -157,7 +157,7 @@ export default {
 <style lang="scss">
 .container {
   // 标题
-
+  margin: 0;
   .headerContain {
     font-size: 18px;
     align-items: center;

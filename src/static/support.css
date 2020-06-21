@@ -1,5 +1,4 @@
 @charset "UTF-8";
-
 .border-1px,
 .border-bottom-1px,
 .border-top-1px,
@@ -75,19 +74,15 @@
 }
 
 /*设备像素比*/
-@media only screen and (-webkit-min-device-pixel-ratio: 2),
-only screen and (min-resolution: 2dppx) {
-
+@media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min-resolution: 2dppx) {
   .border-bottom-1px::after,
   .border-top-1px::after {
-    transform: scaleY(1);
+    transform: scaleY(0.5);
   }
-
   .border-left-1px::after,
   .border-right-1px::after {
     transform: scaleX(0.5);
   }
-
   .border-1px::after {
     width: 200%;
     height: 200%;
@@ -97,19 +92,15 @@ only screen and (min-resolution: 2dppx) {
 }
 
 /*设备像素比*/
-@media only screen and (-webkit-min-device-pixel-ratio: 3),
-only screen and (min-resolution: 3dppx) {
-
+@media only screen and (-webkit-min-device-pixel-ratio: 3), only screen and (min-resolution: 3dppx) {
   .border-bottom-1px::after,
   .border-top-1px::after {
-    transform: scaleY(1);
+    transform: scaleY(0.333);
   }
-
   .border-left-1px::after,
   .border-right-1px::after {
     transform: scaleX(0.333);
   }
-
   .border-1px::after {
     width: 300%;
     height: 300%;
@@ -118,14 +109,10 @@ only screen and (min-resolution: 3dppx) {
   }
 }
 
-
-.clearFix {
-  *zoom: 1;
-}
-
-.clearFix::after {
+.clearFix::after,
+.clearFix::before {
   content: '';
-  display: block;
   clear: both;
-
+  height: 0;
+  display: block;
 }
