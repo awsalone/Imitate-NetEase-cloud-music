@@ -1,5 +1,5 @@
 <template>
-  <div class="container" v-if="songSheetList" ref="box">
+  <div class="sScontainer" v-if="songSheetList" ref="box">
     <!--标题-->
     <HeaderTop class="headerContain">
       <template #left>
@@ -155,9 +155,9 @@ export default {
 }
 </script>
 <style lang="scss">
-.container {
+.sScontainer {
   // 标题
-  margin: 0;
+  margin: 0 !important;
   .headerContain {
     font-size: 18px;
     align-items: center;

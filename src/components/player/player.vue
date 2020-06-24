@@ -1,32 +1,8 @@
 <template>
   <div id="container">
     <audio :src="songUrl" ref="songPlayer" id="songPlayer"></audio>
-    <!-- 底部播放器 -->
-    <div
-      class="musicPlayer border-bottom-1px"
-      v-if="!this.$route.meta.playerShowHide"
-      @click="skipPlayer"
-    >
-      <div class="musicInfo">
-        <div class="musicPortrait" :style="{backgroundImage: songPic}"></div>
-        <div class="musicName">
-          <span class="name">{{songDetail.name}}</span>
-          <span class="author">{{songAuthor}}</span>
-        </div>
-      </div>
-      <div class="musicIcon">
-        <span @click.stop="togglePlayState">
-          <i class="iconfont icon-bofang_bg" v-show="playState"></i>
-          <i class="iconfont icon-zanting1_bg" v-show="!playState"></i>
-        </span>
-        <span>
-          <i class="iconfont icon-danchu_bg" @click.stop="show = !show"></i>
-        </span>
-        &nbsp;&nbsp;
-      </div>
-    </div>
     <!-- 播放页面底部 -->
-    <div class="player" v-else>
+    <div class="player" v-if="this.$route.meta.playerShowHide">
       <div id="songProgress">
         <span>{{cTime | songTime}}</span>
         <div id="line" ref="progressP" @click="skipCtime($event)">
@@ -55,6 +31,31 @@
         </div>
       </div>
     </div>
+    <!-- 底部播放器 -->
+    <div
+      class="musicPlayer border-bottom-1px"
+      v-else-if="!this.$route.meta.playerShowHide&&this.songUrl"
+      @click="skipPlayer"
+    >
+      <div class="musicInfo">
+        <div class="musicPortrait" :style="{backgroundImage: songPic}"></div>
+        <div class="musicName">
+          <span class="name">{{songDetail.name}}</span>
+          <span class="author">{{songAuthor}}</span>
+        </div>
+      </div>
+      <div class="musicIcon">
+        <span @click.stop="togglePlayState">
+          <i class="iconfont icon-bofang_bg" v-show="playState"></i>
+          <i class="iconfont icon-zanting1_bg" v-show="!playState"></i>
+        </span>
+        <span>
+          <i class="iconfont icon-danchu_bg" @click.stop="show = !show"></i>
+        </span>
+        &nbsp;&nbsp;
+      </div>
+    </div>
+
     <!-- 弹出播放列表 -->
     <van-popup v-model="show" position="bottom" round style="height:50%" class="popup">
       <div class="popupTitle">当前播放（{{playList.length}}）</div>

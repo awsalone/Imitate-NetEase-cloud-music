@@ -10,8 +10,8 @@
         </div>
       </template>
     </HeaderTop>
-    <transition name="toggle">
-      <nav class="border-top-1px">
+    <nav ref="nav">
+      <div ref="navChild">
         <router-link
           class="top"
           v-for="(item,index) in tags"
@@ -19,17 +19,17 @@
           :class="{active:item.name === $route.params.id}"
           :to="{ path: `/songSheetPG/songSheetView/${item.name}` }"
         >{{item.name}}</router-link>
-      </nav>
-    </transition>
-    <keep-alive>
-      <router-view></router-view>
-    </keep-alive>
+      </div>
+    </nav>
+
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
 import HeaderTop from '../../components/headerTop/headerTop'
 import { reqsongSheetPg } from '../../api/index'
+import BScroll from 'better-scroll'
 export default {
   data () {
     return {
@@ -41,6 +41,7 @@ export default {
   },
   mounted () {
     this.init()
+
   },
   methods: {
     async init () {
@@ -49,6 +50,15 @@ export default {
       if (!this.$route.params.id) {
         this.$router.push('/songSheetPG/songSheetView')
       }
+      this.$nextTick(() => {
+        let count = this.tags.length
+        console.log(count)
+        this.$refs.navChild.style.width = 32 * count + 'px'
+        new BScroll(this.$refs.nav, {
+          click: true,
+          scrollX: true
+        })
+      })
     }
 
   }
@@ -72,28 +82,23 @@ export default {
   }
   nav {
     overflow: hidden;
-    display: flex;
     position: fixed;
     background-color: #fff;
-    top: 70px;
+    top: 69px;
     padding: 5px 0;
-    .top {
-      flex: 0 0 auto;
-      margin: 0 20px;
-      color: rgb(158, 154, 154);
-      display: inline-block;
-      padding: 3px 0 6px 0;
-    }
-    .active {
-      border-bottom: 2px solid red;
-    }
-    .toggle-enter-active,
-    .toggle-leave-active {
-      transition: all 1s ease;
-    }
-    .toggle-enter,
-    .toggle-leave-to {
-      opacity: 0;
+    width: 100%;
+    div {
+      display: flex;
+      .top {
+        flex: 0 0 auto;
+        margin: 0 20px;
+        color: rgb(158, 154, 154);
+        display: inline-block;
+        padding: 3px 0 6px 0;
+      }
+      .active {
+        border-bottom: 2px solid red;
+      }
     }
   }
 }
