@@ -33,34 +33,42 @@ import BScroll from 'better-scroll'
 export default {
   data () {
     return {
-      tags: []
+      tags: [] // 子路由标签
     }
   },
   components: {
     HeaderTop
   },
-  mounted () {
+  created () {
     this.init()
-
+  },
+  mounted () {
+    // 初始子路由
+    if (!this.$route.params.id) {
+      this.$router.push('/songSheetPG/songSheetView')
+    }
   },
   methods: {
     async init () {
       const result = await reqsongSheetPg()
       this.tags = result.tags
-      if (!this.$route.params.id) {
-        this.$router.push('/songSheetPG/songSheetView')
-      }
+    }
+  },
+  watch: {
+    tags () {
       this.$nextTick(() => {
-        let count = this.tags.length
-        console.log(count)
-        this.$refs.navChild.style.width = 32 * count + 'px'
+        let count = null
+        this.tags.forEach(item => {
+          count += item.name.length * 16 + 40
+        });
+        this.$refs.navChild.style.width = count + 'px'
         new BScroll(this.$refs.nav, {
           click: true,
           scrollX: true
         })
       })
-    }
 
+    }
   }
 
 }
@@ -90,6 +98,7 @@ export default {
     div {
       display: flex;
       .top {
+        box-sizing: border-box;
         flex: 0 0 auto;
         margin: 0 20px;
         color: rgb(158, 154, 154);
