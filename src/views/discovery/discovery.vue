@@ -59,7 +59,7 @@
                 {{item.playCount | count}}
               </span>
               <div>
-                <img :src="item.picUrl" />
+                <img :src="item.picUrl+'?param=100y100'" />
               </div>
             </div>
             <span class="picText">{{item.name}}</span>
@@ -85,7 +85,7 @@
           >
             <div class="playInfo">
               <div class="playPortrait">
-                <img v-lazy="item.picUrl" />
+                <img v-lazy="item.picUrl+'?param=50y50'" />
               </div>
               <div class="playMusicInfo">
                 <span>{{item.name}}</span>

@@ -2,7 +2,7 @@
   <div class="container">
     <ul class="boxcontain">
       <li class="box" v-for="(item,index) in playList" :key="index" @click="skipSongSheet(item.id)">
-        <img v-lazy="item.coverImgUrl" alt />
+        <img v-lazy="item.coverImgUrl+'?param=100y100'" alt />
         <span class="boxText">{{item.name}}</span>
       </li>
     </ul>

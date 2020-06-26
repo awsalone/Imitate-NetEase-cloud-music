@@ -8,6 +8,7 @@ const songSheet = () => import('../views/songSheet/songSheet')
 const playerList = () => import('../views/playerList/playerList')
 const songSheetPG = () => import('../views/songSheetPG/songSheetPG')
 const songSheetView = () => import('../views/songSheetPG/songSheetView')
+const login = () => import('../views/login/login')
 Vue.use(VueRouter)
 
 const routes = [
@@ -66,8 +67,18 @@ const routes = [
     ]
   },
   {
+    path: '/login',
+    component: login,
+    children: [
+
+    ]
+  },
+  {
     path: '/',
-    redirect: '/discovery'
+    beforeEnter: (to, from, next) => {
+      if (window.sessionStorage.clMusic || window.sessionStorage.clMusicConfirm) { next({ path: '/discovery' }) }
+      else { next({ path: '/login' }) }
+    }
   }
 ]
 
