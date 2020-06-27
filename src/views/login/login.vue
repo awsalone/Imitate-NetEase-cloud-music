@@ -3,14 +3,30 @@
     <span class="logo">
       <i class="iconfont icon-yinfu" style="fontSize:50px"></i>
     </span>
-    <el-form label-width="20%" label-position="left" size="medium" class="loginForm" :rules="rules">
+    <el-form
+      label-width="20%"
+      label-position="left"
+      :model="ruleForm"
+      size="medium"
+      class="loginForm"
+      :rules="rules"
+      ref="ruleForm"
+    >
       <el-form-item label="手机号码" prop="phoneNum">
-        <el-input placeholder="请输入手机号码" v-model="phoneNum"></el-input>
+        <el-input placeholder="请输入手机号码" v-model="ruleForm.phoneNum"></el-input>
       </el-form-item>
-      <el-form-item label="验证码" prop="captchaNum">
-        <el-input placeholder="请输入验证码" v-model="captcha">
-          <el-button type="text" slot="suffix">{{clicked? '已发送':'获取验证码'}}</el-button>
+      <el-form-item label="验证码" prop="captcha">
+        <el-input placeholder="请输入验证码" v-model="ruleForm.captcha">
+          <el-button
+            type="text"
+            slot="suffix"
+            :disabled="clicked"
+            @click="sendCaptcha"
+          >{{clicked? `(${time}s)已发送`:'获取验证码'}}</el-button>
         </el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-button plain class="submit">确定</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -19,23 +35,60 @@
 export default {
   data () {
     var validatorPhone = (rules, value, callback) => {
-      if (!/^1$/.test(value)) {
-        callback(new Error('请输入正确电话号码'))
-      } else {
+      if (/^1/.test(value)) {
         callback()
+      } else {
+        callback(new Error('请输入正确电话号码'))
+      }
+    }
+    var validatorcaptcha = (rules, value, callback) => {
+      if (/\d{4}/.test(value)) {
+        callback()
+      } else {
+        callback(new Error('请输入正确验证码'))
       }
     }
     return {
-      phoneNum: '',
-      captcha: '',
       clicked: false,
+      time: 30,
+      ruleForm: {
+        phoneNum: '',
+        captcha: null
+      },
       rules: {
         phoneNum: [
-          { validator: validatorPhone, trigger: 'blur' }]
-      },
-      captchaNum: [
-        { required: true, trigger: 'blur', type: 'number' }
-      ]
+          { validator: validatorPhone, trigger: 'blur' }
+        ],
+        captcha: [
+          {
+            trigger: 'blur',
+            validator: validatorcaptcha
+
+          }
+        ]
+
+      }
+    }
+  },
+  methods: {
+    sendCaptcha: function () {
+      this.$refs.ruleForm.validateField('phoneNum', (valid) => {
+        if (valid) { return false } else {
+          this.clicked = true
+          this.timer = setInterval(() => {
+            this.time -= 1
+          }, 1000)
+        }
+      })
+    }
+  },
+  watch: {
+    time () {
+      if (this.time === 0) {
+        clearInterval(this.timer)
+        this.time = 30
+        this.clicked = false
+      }
     }
   }
 
@@ -66,6 +119,9 @@ export default {
     position: absolute;
     top: 40%;
     width: 100%;
+    .submit {
+      float: right;
+    }
   }
 }
 </style>
