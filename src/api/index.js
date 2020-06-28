@@ -18,3 +18,7 @@ export const reqrecNewSong = () => ajax(`${BASE_URL}/personalized/newsong`)
 export const reqsongSheetPg = () => ajax(`${BASE_URL}/playlist/hot`)
 // 获取歌单分类数据
 export const reqsongSheetTag = (data) => ajax(`${BASE_URL}/top/playlist`, data)
+// 发送验证码
+export const sendCaptcha = (data) => ajax(`${BASE_URL}/captcha/sent`, data)
+// 验证验证码
+export const verifyCaptcha = ({ phone, captcha }) => ajax(`${BASE_URL}/captcha/verify`, { phone, captcha })

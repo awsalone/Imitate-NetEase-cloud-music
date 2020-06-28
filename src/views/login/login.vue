@@ -4,7 +4,6 @@
       <i class="iconfont icon-yinfu" style="fontSize:50px"></i>
     </span>
     <el-form
-      label-width="20%"
       label-position="left"
       :model="ruleForm"
       size="medium"
@@ -21,21 +20,38 @@
             type="text"
             slot="suffix"
             :disabled="clicked"
-            @click="sendCaptcha"
+            @click="getCaptcha"
           >{{clicked? `(${time}s)已发送`:'获取验证码'}}</el-button>
         </el-input>
       </el-form-item>
       <el-form-item>
-        <el-button plain class="submit">确定</el-button>
+        <button
+          plain
+          class="button confirm"
+          @click="onsubmit"
+          @mousedown="changeBgc('#f1695f',$event)"
+          @mouseup="changeBgc('#fff',$event)"
+        >确定</button>
+      </el-form-item>
+      <el-form-item>
+        <button
+          plain
+          class="button tourist"
+          @click="touristStatus"
+          @mousedown="changeBgc('#f1695f', $event)"
+          @mouseup="changeBgc('#fff',$event)"
+        >立即体验</button>
       </el-form-item>
     </el-form>
   </div>
 </template>
 <script>
+import { sendCaptcha, verifyCaptcha } from '../../api/index'
 export default {
+
   data () {
     var validatorPhone = (rules, value, callback) => {
-      if (/^1/.test(value)) {
+      if (/^[1](([3][0-9])|([4][5-9])|([5][0-3,5-9])|([6][5,6])|([7][0-8])|([8][0-9])|([9][1,8,9]))[0-9]{8}$/.test(value)) {
         callback()
       } else {
         callback(new Error('请输入正确电话号码'))
@@ -71,15 +87,42 @@ export default {
     }
   },
   methods: {
-    sendCaptcha: function () {
+    // get captcha
+    getCaptcha: function () {
       this.$refs.ruleForm.validateField('phoneNum', (valid) => {
         if (valid) { return false } else {
           this.clicked = true
+          sendCaptcha({ phone: this.ruleForm.phoneNum })
           this.timer = setInterval(() => {
             this.time -= 1
           }, 1000)
         }
       })
+    },
+    // submit
+    onsubmit: function () {
+      this.$refs.ruleForm.validate(async (valid) => {
+        if (valid) {
+          const result = await verifyCaptcha({ phone: this.ruleForm.phoneNum, captcha: this.ruleForm.captcha })
+          if (result.code === 200) {
+            this.$router.push('/discovery')
+          } else {
+            this.$refs.ruleForm.validateField('captcha', (valid) => {
+              return false
+            })
+          }
+        } else {
+          return false
+        }
+      })
+    },
+    // change button bgc
+    changeBgc (color, e) {
+      e.target.style.backgroundColor = color
+    },
+    // touristStatus
+    touristStatus () {
+      console.log('touristStatus')
     }
   },
   watch: {
@@ -90,6 +133,9 @@ export default {
         this.clicked = false
       }
     }
+  },
+  mounted () {
+
   }
 
 }
@@ -97,8 +143,8 @@ export default {
 <style lang='scss'>
 .loginContainer {
   height: 100%;
-  background-color: rgba(255, 0, 0, 0.897);
-  background-color: #ccc;
+  background-color: #dc2c1f;
+
   .logo {
     box-sizing: border-box;
     left: 50%;
@@ -115,12 +161,28 @@ export default {
   }
   .loginForm {
     box-sizing: border-box;
-    padding: 10px;
     position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
     top: 40%;
-    width: 100%;
-    .submit {
-      float: right;
+    width: 70%;
+    .button {
+      display: block;
+      width: 100%;
+      outline: none;
+      height: 36px;
+      border-radius: 30px;
+      border: 0;
+      &.confirm {
+        background-color: #fff;
+        color: #dc2c1f;
+        margin: 10px 0 -10px;
+      }
+      &.tourist {
+        background-color: #dc2c1f;
+        color: #fff;
+        border: 1px solid #fff;
+      }
     }
   }
 }
