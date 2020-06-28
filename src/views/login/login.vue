@@ -28,18 +28,18 @@
         <button
           plain
           class="button confirm"
+          @touchstart="changeBgc({bgcolor:'#f1695f', color:'#fff',e:$event})"
+          @touchend="changeBgc({bgcolor:'#fff',color:'#f1695f',e:$event})"
           @click="onsubmit"
-          @mousedown="changeBgc('#f1695f',$event)"
-          @mouseup="changeBgc('#fff',$event)"
         >确定</button>
       </el-form-item>
       <el-form-item>
         <button
           plain
           class="button tourist"
+          @touchstart="changeBgc({bgcolor:'#f1695f', e:$event})"
+          @touchend="changeBgc({bgcolor:'#dc2c1f',e:$event})"
           @click="touristStatus"
-          @mousedown="changeBgc('#f1695f', $event)"
-          @mouseup="changeBgc('#fff',$event)"
         >立即体验</button>
       </el-form-item>
     </el-form>
@@ -117,8 +117,13 @@ export default {
       })
     },
     // change button bgc
-    changeBgc (color, e) {
-      e.target.style.backgroundColor = color
+    changeBgc ({ bgcolor, color, e }) {
+      e.target.style.backgroundColor = bgcolor
+      if (color) {
+        e.target.style.color = color
+      }
+
+      console.log(e.target.style.backgroundColor)
     },
     // touristStatus
     touristStatus () {
@@ -141,6 +146,12 @@ export default {
 }
 </script>
 <style lang='scss'>
+.el-form-item__label {
+  color: #fff;
+}
+.el-form-item__error {
+  color: #fff;
+}
 .loginContainer {
   height: 100%;
   background-color: #dc2c1f;
