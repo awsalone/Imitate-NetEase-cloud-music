@@ -127,7 +127,8 @@ export default {
     },
     // touristStatus
     touristStatus () {
-      console.log('touristStatus')
+      window.localStorage.setItem('touristLogin', 'true')
+      this.$router.push('/discovery')
     }
   },
   watch: {

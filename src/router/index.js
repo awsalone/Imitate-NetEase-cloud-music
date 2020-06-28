@@ -76,8 +76,7 @@ const routes = [
   {
     path: '/',
     beforeEnter: (to, from, next) => {
-      if (window.sessionStorage.clMusic || window.sessionStorage.clMusicConfirm) { next({ path: '/discovery' }) }
-      else { next({ path: '/login' }) }
+      if (window.localStorage.getItem('touristLogin')) { next({ path: '/discovery' }) } else { next({ path: '/login' }) }
     }
   }
 ]
