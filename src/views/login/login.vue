@@ -20,22 +20,22 @@
             type="text"
             slot="suffix"
             :disabled="clicked"
-            @click="getCaptcha"
+            @click.prevent="getCaptcha"
           >{{clicked? `(${time}s)已发送`:'获取验证码'}}</el-button>
         </el-input>
       </el-form-item>
       <el-form-item>
         <button
-          plain
+          type="button"
           class="button confirm"
           @touchstart="changeBgc({bgcolor:'#f1695f', color:'#fff',e:$event})"
           @touchend="changeBgc({bgcolor:'#fff',color:'#f1695f',e:$event})"
-          @click="onsubmit"
+          @click.prevent="onsubmit"
         >确定</button>
       </el-form-item>
       <el-form-item>
         <button
-          plain
+          type="button"
           class="button tourist"
           @touchstart="changeBgc({bgcolor:'#f1695f', e:$event})"
           @touchend="changeBgc({bgcolor:'#dc2c1f',e:$event})"
@@ -105,6 +105,7 @@ export default {
         if (valid) {
           const result = await verifyCaptcha({ phone: this.ruleForm.phoneNum, captcha: this.ruleForm.captcha })
           if (result.code === 200) {
+            window.localStorage.setItem('userlogin', 'true')
             this.$router.push('/discovery')
           } else {
             this.$refs.ruleForm.validateField('captcha', (valid) => {
@@ -122,13 +123,13 @@ export default {
       if (color) {
         e.target.style.color = color
       }
-
-      console.log(e.target.style.backgroundColor)
     },
     // touristStatus
     touristStatus () {
       window.localStorage.setItem('touristLogin', 'true')
-      this.$router.push('/discovery')
+      setTimeout(() => {
+        this.$router.push('/discovery')
+      }, 1000)
     }
   },
   watch: {

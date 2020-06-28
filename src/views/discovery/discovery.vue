@@ -150,6 +150,7 @@ export default {
   methods: {
     a () {
       window.localStorage.removeItem('touristLogin')
+      window.localStorage.removeItem('userlogin')
       console.log(window.localStorage.getItem('touristLogin'))
     },
     // 获取轮播图数据
