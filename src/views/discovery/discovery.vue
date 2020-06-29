@@ -43,7 +43,7 @@
     <div class="hotSheet">
       <div class="hotSheetBanner">
         <div>发现好歌单</div>
-        <div>查看更多</div>
+        <div @click="$router.push('/songSheetPG')">查看更多</div>
       </div>
       <div class="hotSheetContent">
         <ul class="hotSheetUl" ref="hotSheetList">
@@ -367,6 +367,14 @@ export default {
       display: flex;
       justify-content: space-between;
       margin: 0 10px 10px 10px;
+      :last-child {
+        border: 1px solid rgb(172, 171, 171);
+        border-radius: 35px;
+        padding: 5px;
+        font-size: 13px;
+        width: 60px;
+        text-align: center;
+      }
     }
 
     .recmmendMusic {

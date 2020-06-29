@@ -12,6 +12,7 @@ const login = () => import('../views/login/login')
 Vue.use(VueRouter)
 
 const routes = [
+  // 发现页 1级
   {
     path: '/discovery',
     component: discovery,
@@ -19,6 +20,7 @@ const routes = [
       headerShow: true
     }
   },
+  // 我的 1级
   {
     path: '/mine',
     component: mine,
@@ -26,6 +28,7 @@ const routes = [
       headerShow: true
     }
   },
+  // 视频页 1级
   {
     path: '/movie',
     component: movie,
@@ -33,6 +36,7 @@ const routes = [
       headerShow: true
     }
   },
+  // 云村 1级
   {
     path: '/town',
     component: town,
@@ -40,11 +44,13 @@ const routes = [
       headerShow: true
     }
   },
+  // 歌单页
   {
     path: '/songSheet/:id',
     component: songSheet
 
   },
+  // 播放页
   {
     path: '/playerList/:id',
     component: playerList,
@@ -52,6 +58,7 @@ const routes = [
       playerShowHide: true
     }
   },
+  // 歌单广场
   {
     path: '/songSheetPG',
     component: songSheetPG,
@@ -66,6 +73,7 @@ const routes = [
       }
     ]
   },
+  // 登陆页
   {
     path: '/login',
     component: login,

@@ -35,7 +35,7 @@
     <div
       class="musicPlayer border-bottom-1px"
       v-else-if="!this.$route.meta.playerShowHide&&this.songUrl"
-      @click="skipPlayer"
+      @click.stop="skipPlayer"
     >
       <div class="musicInfo">
         <div class="musicPortrait" :style="{backgroundImage: songPic}"></div>
@@ -58,23 +58,25 @@
 
     <!-- 弹出播放列表 -->
     <van-popup v-model="show" position="bottom" round style="height:50%" class="popup">
-      <div class="popupTitle">当前播放（{{playList.length}}）</div>
-      <div class="popupControl">
-        <div class="popupControlL">
-          <span>
-            <div class="playMode" @click="togglePlayMode">
-              <i class="iconfont icon-xunhuan" :class="{active: playMode == 0}"></i>
-              <i class="iconfont icon-suiji" :class="{active: playMode == 1}"></i>
-              <i class="iconfont icon-danquxunhuan" :class="{active: playMode == 2}"></i>
-            </div>
-          </span>
-          <span>{{playMode ===0? '列表循环': playMode ===1 ? '随机播放' : '单曲循环'}}</span>
-        </div>
-        <div class="popupControlR" @click="deleteSongList">
-          <i class="iconfont icon-huishouzhan_huaban"></i>
+      <div class="popupTitle">
+        <div class="title">当前播放（{{playList.length}}）</div>
+        <div class="popupControl">
+          <div class="popupControlL">
+            <span>
+              <div class="playMode" @click="togglePlayMode">
+                <i class="iconfont icon-xunhuan" :class="{active: playMode == 0}"></i>
+                <i class="iconfont icon-suiji" :class="{active: playMode == 1}"></i>
+                <i class="iconfont icon-danquxunhuan" :class="{active: playMode == 2}"></i>
+              </div>
+            </span>
+            <span>{{playMode ===0? '列表循环': playMode ===1 ? '随机播放' : '单曲循环'}}</span>
+          </div>
+          <div class="popupControlR" @click="deleteSongList">
+            <i class="iconfont icon-huishouzhan_huaban" style="fontSize:16px"></i>
+          </div>
         </div>
       </div>
-      <ul>
+      <ul class="popupUl">
         <li
           v-for="(item,index) in playList"
           :key="index"
@@ -82,7 +84,7 @@
           @click="changeSong(item.id)"
         >
           <span class="popupName">{{item.name}}</span>
-          <span @click="deleteSong(item.id)">
+          <span @click.stop="deleteSong(item.id)">
             <i class="iconfont icon-guanbi"></i>
           </span>
         </li>
@@ -100,8 +102,8 @@ export default {
     return {
       songAuthor: '', // 作者
       songPic: '',
-      cTime: '',
-      dTime: '',
+      cTime: '', // 当前播放时间
+      dTime: '', // 总时间
       playMode: '',
       playState: true, // false点击暂停 true点击播放
       show: false, // 弹出层
@@ -231,9 +233,19 @@ export default {
     deleteSongList () {
       this.$store.commit('delete_playList')
       this.show = false
+      this.$refs.songPlayer.pause()
+      if (this.$route.meta.playerShowHide) {
+        this.$router.push('/discovery')
+      }
     },
     deleteSong (id) {
       this.$store.commit('delete_song', { id: id })
+      if (!this.playList.length) {
+        this.deleteSongList()
+      }
+      if (id === this.id) {
+        this.nextSong()
+      }
     },
     changeSong (id) {
       this.id = id
@@ -274,9 +286,12 @@ export default {
   watch: {
     // 获取歌曲歌手名
     songDetail: function () {
-      this.songAuthor = this.songDetail.ar[0].name
-      this.songPic = `url(${this.songDetail.al.picUrl})`
-      this.id = this.songDetail.id
+      console.log(this.songDetail)
+      if (Object.keys(this.songDetail).length) {
+        this.songAuthor = this.songDetail.ar[0].name
+        this.songPic = `url(${this.songDetail.al.picUrl})`
+        this.id = this.songDetail.id
+      }
     },
     // 播放状态设置清除定时器
     playState: function () {
@@ -292,7 +307,6 @@ export default {
     id: function () {
       this.init(this.id)
       const audio = this.$refs.songPlayer
-      console.log(this.id)
       setTimeout(() => {
         if (!this.playState) {
           audio.play()
@@ -312,6 +326,7 @@ export default {
 </script>
 <style lang="scss">
 @import url('../../static/support.css');
+
 #container {
   .musicPlayer {
     display: flex;
@@ -441,45 +456,56 @@ export default {
   }
   .popup {
     .popupTitle {
-      margin: 15px 0 10px 10px;
-      font-size: 20px;
-    }
-    .popupControl {
-      display: flex;
+      border-radius: 20px 20px 0 0;
+      padding: 10px 0 5px 10px;
+      box-sizing: border-box;
+      width: 100%;
       justify-content: space-between;
-      height: 25px;
-      padding: 5px 10px;
-      .popupControlL {
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid #ccc;
+      position: fixed;
+      background-color: #fff;
+      .popupControl {
         display: flex;
+        height: 25px;
+        padding: 5px 10px;
         align-items: center;
-        .playMode {
-          i {
-            display: none;
-            font-size: 30px;
-          }
-          .active {
-            display: block;
+        .popupControlL {
+          display: flex;
+          align-items: center;
+          .playMode {
+            i {
+              display: none;
+              font-size: 16px;
+            }
+            .active {
+              display: block;
+            }
           }
         }
-      }
-      .popupControlR {
-        i {
-          font-size: 20px;
+        .popupControlR {
+          i {
+            font-size: 20px;
+          }
         }
       }
     }
-    .popupLi {
-      display: flex;
-      justify-content: space-between;
-      height: 25px;
-      padding: 5px 10px;
-
-      .popupName {
-        display: block;
-        width: 250px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+    .popupUl {
+      margin-top: 50px;
+      .popupLi {
+        display: flex;
+        justify-content: space-between;
+        height: 25px;
+        padding: 5px 10px;
+        align-items: center;
+        .popupName {
+          display: block;
+          width: 250px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
       }
     }
   }

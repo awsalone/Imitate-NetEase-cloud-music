@@ -20,6 +20,10 @@ export default {
   // 删除播放列表
   [DELETE_PLAYLIST] (state) {
     state.playList = []
+    state.songUrl = ''
+    state.songDetail = {}
+    state.currentTime = ''
+    state.playStateC = true
   },
   // 删除选定歌曲
   [DELETE_SONG] (state, { id }) {
