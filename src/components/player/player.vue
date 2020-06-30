@@ -329,7 +329,8 @@ export default {
   .musicPlayer {
     display: flex;
     position: fixed;
-    bottom: 0;
+    bottom: -2px;
+    box-sizing: border-box;
     z-index: 1;
     border-top: 1px solid #ccc;
     box-sizing: border-box;
