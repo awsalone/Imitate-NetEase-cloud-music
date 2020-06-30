@@ -233,7 +233,6 @@ export default {
     deleteSongList () {
       this.$store.commit('delete_playList')
       this.show = false
-      this.$refs.songPlayer.pause()
       if (this.$route.meta.playerShowHide) {
         this.$router.push('/discovery')
       }
@@ -286,7 +285,6 @@ export default {
   watch: {
     // 获取歌曲歌手名
     songDetail: function () {
-      console.log(this.songDetail)
       if (Object.keys(this.songDetail).length) {
         this.songAuthor = this.songDetail.ar[0].name
         this.songPic = `url(${this.songDetail.al.picUrl})`

@@ -176,8 +176,9 @@ export default {
     changeSong (id) {
       if (id) {
         this.curId = id
-        if (!this.songDetail || this.songDetail.id !== id) {
+        if (this.songDetail.id !== id) {
           this.$store.dispatch('getSongDetail', { ids: id })
+          this.$store.dispatch('getSongUrl', { id: id })
           this.$store.commit('receive_playState', { zt: false })
         } else {
           this.$router.push({ path: `/playerlist/${id}` })
