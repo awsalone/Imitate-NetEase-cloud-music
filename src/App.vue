@@ -27,13 +27,12 @@
         </ul>
       </template>
       <template #right>
-        <i class="iconfont icon-icon- search"></i>
+        <i class="iconfont icon-icon- search" @click="$router.push('/search')"></i>
       </template>
     </HeaderTop>
     <keep-alive :include="['/discovery','/mine','/movie','/town']">
       <router-view></router-view>
     </keep-alive>
-
     <Player></Player>
   </div>
 </template>
@@ -48,6 +47,10 @@ export default {
 }
 </script>
 <style lang='scss'>
+::-webkit-scrollbar {
+  width: 0 !important;
+  height: 0;
+}
 #app {
   [v-cloak] {
     display: none !important;
