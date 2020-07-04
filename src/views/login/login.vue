@@ -105,7 +105,7 @@ export default {
         if (valid) {
           const result = await verifyCaptcha({ phone: this.ruleForm.phoneNum, captcha: this.ruleForm.captcha })
           if (result.code === 200) {
-            window.localStorage.setItem('userlogin', 'true')
+            window.localStorage.setItem('Authorization', 'true')
             this.$router.push('/discovery')
           } else {
             this.$refs.ruleForm.validateField('captcha', (valid) => {
@@ -126,7 +126,7 @@ export default {
     },
     // touristStatus
     touristStatus () {
-      window.localStorage.setItem('touristLogin', 'true')
+      window.localStorage.setItem('Authorization', 'true')
       setTimeout(() => {
         this.$router.push('/discovery')
       }, 1000)

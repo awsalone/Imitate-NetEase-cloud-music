@@ -87,7 +87,8 @@ const routes = [
   {
     path: '/',
     beforeEnter: (to, from, next) => {
-      if (window.localStorage.getItem('userlogin') || window.localStorage.getItem('touristLogin')) { next({ path: '/discovery' }) } else { next({ path: '/login' }) }
+      const token = window.localStorage.getItem('Authorization')
+      if (token === '' || token === null) { next({ path: '/login' }) } else { next({ path: '/discovery' }) }
     }
   }
 ]

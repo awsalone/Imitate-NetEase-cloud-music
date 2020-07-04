@@ -107,7 +107,6 @@
       </div>
     </div>
     <!--播放显示-->
-    <button @click="a">1231231321</button>
   </div>
 </template>
 <script>
@@ -148,11 +147,6 @@ export default {
 
   },
   methods: {
-    a () {
-      window.localStorage.removeItem('touristLogin')
-      window.localStorage.removeItem('userlogin')
-      console.log(window.localStorage.getItem('touristLogin'))
-    },
     // 获取轮播图数据
     getLoop: async function () {
       const result = await reqBanner(1)
