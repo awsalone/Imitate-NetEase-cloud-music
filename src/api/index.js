@@ -22,3 +22,7 @@ export const reqsongSheetTag = (data) => ajax(`${BASE_URL}/top/playlist`, data)
 export const sendCaptcha = (data) => ajax(`${BASE_URL}/captcha/sent`, data)
 // 验证验证码
 export const verifyCaptcha = ({ phone, captcha }) => ajax(`${BASE_URL}/captcha/verify`, { phone, captcha })
+// 默认搜索关键词
+export const defaultKeyword = ({ time }) => ajax(`${BASE_URL}/search/default`, { time })
+// 热搜列表
+export const hotSearch = () => ajax(`${BASE_URL}/search/hot/detail`)
