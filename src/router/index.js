@@ -10,6 +10,8 @@ const songSheetPG = () => import('../views/songSheetPG/songSheetPG')
 const songSheetView = () => import('../views/songSheetPG/songSheetView')
 const login = () => import('../views/login/login')
 const search = () => import('../views/search/search')
+const searchDefault = () => import('../views/search/defaultContent')
+const searchContent = () => import('../views/search/searchContent')
 Vue.use(VueRouter)
 
 const routes = [
@@ -48,7 +50,21 @@ const routes = [
   // search页 1级
   {
     path: '/search',
-    component: search
+    component: search,
+    children: [
+      {
+        path: '/default',
+        component: searchDefault
+      },
+      {
+        path: '/content',
+        component: searchContent
+      },
+      {
+        path: '/',
+        redirect: '/default'
+      }
+    ]
   },
   // 歌单页
   {
