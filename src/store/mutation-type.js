@@ -5,3 +5,4 @@ export const DELETE_PLAYLIST = 'delete_playList' // 清空播放列表
 export const DELETE_SONG = 'delete_song' // 删除歌曲
 export const RECEIVE_PLAYSTATE = 'receive_playState' // 播放状态
 export const PLAY_ALL = 'play_all' // 播放全部
+export const RECEIVE_KEYWORDS = 'receive_keywords' // 搜索关键字

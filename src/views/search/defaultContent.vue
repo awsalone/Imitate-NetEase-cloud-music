@@ -6,7 +6,7 @@
         <i style="font-size:16px" class="iconfont icon-huishouzhan_huaban"></i>
       </div>
       <div class="historyContent">
-        <span class="hisotryItem">1231</span>
+        <span class="hisotryItem" v-for="(item,index) in keyWords" :key="index">{{item}}</span>
       </div>
     </div>
     <div class="hotSearch">
@@ -19,7 +19,7 @@
               <span>{{item.searchWord}}</span>
               <span>{{item.score}}</span>
             </div>
-            <span>{{item.content}}</span>
+            <span class="songContent">{{item.content}}</span>
           </div>
         </li>
       </ul>
@@ -28,11 +28,15 @@
 </template>
 <script>
 import { hotSearch } from '../../api/index'
+import { mapState } from 'vuex'
 export default {
   data () {
     return {
       hotSearchs: []
     }
+  },
+  computed: {
+    ...mapState(['keyWords'])
   },
   methods: {
     init: async function () {
@@ -87,10 +91,17 @@ export default {
           display: flex;
           flex-direction: column;
           width: 100%;
+          height: 40px;
+          justify-content: center;
+
           .songItem {
             display: flex;
             justify-content: space-between;
             padding-right: 5px;
+            flex: 1;
+          }
+          .songContent {
+            flex: 1;
           }
         }
       }

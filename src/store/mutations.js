@@ -1,4 +1,4 @@
-import { RECEIVE_SONGS, RECEIVE_SONGURL, RECEIVE_PLAYMODE, DELETE_PLAYLIST, DELETE_SONG, RECEIVE_PLAYSTATE, PLAY_ALL } from './mutation-type'
+import { RECEIVE_SONGS, RECEIVE_SONGURL, RECEIVE_PLAYMODE, DELETE_PLAYLIST, DELETE_SONG, RECEIVE_PLAYSTATE, PLAY_ALL, RECEIVE_KEYWORDS } from './mutation-type'
 
 export default {
   // 当前播放和播放列表判断
@@ -38,5 +38,15 @@ export default {
   },
   [PLAY_ALL] (state, { playList }) {
     state.playList = playList
+  },
+  [RECEIVE_KEYWORDS] (state, keyword) {
+    const key = state.keyWords.filter(item => {
+      return item === keyword
+    })
+    if (key.length) {
+
+    } else {
+      state.keyWords.push(keyword)
+    }
   }
 }

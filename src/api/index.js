@@ -26,3 +26,5 @@ export const verifyCaptcha = ({ phone, captcha }) => ajax(`${BASE_URL}/captcha/v
 export const defaultKeyword = ({ time }) => ajax(`${BASE_URL}/search/default`, { time })
 // 热搜列表
 export const hotSearch = () => ajax(`${BASE_URL}/search/hot/detail`)
+// 获取搜索内容
+export const searchContent = ({ keywords }) => ajax(`${BASE_URL}/search`, { keywords })
