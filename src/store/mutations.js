@@ -1,4 +1,4 @@
-import { RECEIVE_SONGS, RECEIVE_SONGURL, RECEIVE_PLAYMODE, DELETE_PLAYLIST, DELETE_SONG, RECEIVE_PLAYSTATE, PLAY_ALL, RECEIVE_KEYWORDS } from './mutation-type'
+import { RECEIVE_SONGS, RECEIVE_SONGURL, RECEIVE_PLAYMODE, DELETE_PLAYLIST, DELETE_SONG, RECEIVE_PLAYSTATE, PLAY_ALL, RECEIVE_KEYWORDS, RECEIVE_SEARCH, DELETE_KEYWORDS } from './mutation-type'
 
 export default {
   // 当前播放和播放列表判断
@@ -39,6 +39,7 @@ export default {
   [PLAY_ALL] (state, { playList }) {
     state.playList = playList
   },
+  // 关键词
   [RECEIVE_KEYWORDS] (state, keyword) {
     const key = state.keyWords.filter(item => {
       return item === keyword
@@ -48,5 +49,13 @@ export default {
     } else {
       state.keyWords.push(keyword)
     }
+  },
+  // 搜索结果
+  [RECEIVE_SEARCH] (state, data) {
+    state.searchRes = data
+  },
+  // 清空搜索历史
+  [DELETE_KEYWORDS] (state) {
+    state.keyWords = []
   }
 }

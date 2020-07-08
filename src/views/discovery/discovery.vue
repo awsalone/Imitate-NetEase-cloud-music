@@ -414,10 +414,5 @@ export default {
       }
     }
   }
-  &::after {
-    display: block;
-    height: 70px;
-    content: '';
-  }
 }
 </style>

@@ -2,7 +2,7 @@
   <div class="searchContainer">
     <HeaderTop>
       <template #left>
-        <i class="iconfont icon-jiantou3" style="font-size:25px" @click="$router.back()"></i>
+        <i class="iconfont icon-jiantou3" style="font-size:25px" @click="backEvent"></i>
       </template>
       <template #center>
         <input
@@ -22,7 +22,7 @@
         ></router-link>
       </template>
     </HeaderTop>
-    <router-view :content="this.searchContent"></router-view>
+    <router-view @keyword-push="keywordPush"></router-view>
   </div>
 </template>
 <script>
@@ -33,8 +33,7 @@ export default {
   data () {
     return {
       defaultKeyword: '请输入搜索项',
-      keyWord: '',
-      searchContent: ''
+      keyWord: ''
     }
   },
   components: {
@@ -60,10 +59,19 @@ export default {
       this.keyWord = item
       this.$store.commit('receive_keywords', item)
       const result = await searchContent({ keywords: this.keyWord })
-      this.searchContent = result.result.songs
+      const res = result.result.songs
+      this.$store.commit('receive_search', res)
+    },
+    keywordPush: function (data) {
+      this.keyWord = data
+    },
+    backEvent: function () {
+      this.$router.back()
+      this.keyWord = ''
     }
   },
   created () {
+    this.keyWord = ''
     this.init()
     const arr = [1, 2, 3]
     const res = arr.filter((item) => {

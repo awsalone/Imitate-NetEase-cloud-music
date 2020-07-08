@@ -2,7 +2,7 @@
   <div>
     <div class="title">
       <span>单曲</span>
-      <span @click="playAll(searchContent,searchContent[0].id)">
+      <span @click="playAll(searchRes,searchRes[0].id)">
         <i class="iconfont icon-bofang_bg"></i>
         <span>播放全部</span>
       </span>
@@ -10,7 +10,7 @@
     <ul>
       <li
         class="songItem"
-        v-for="(item, index) in content"
+        v-for="(item, index) in searchRes"
         :key="index"
         @click="changeSong(item.id)"
       >
@@ -28,11 +28,10 @@
   </div>
 </template>
 <script>
+import { mapState } from 'vuex'
 export default {
-  props: ['content'],
   data () {
     return {
-      searchContent: this.content
     }
   },
   filters: {
@@ -57,8 +56,11 @@ export default {
       this.changeSong(id)
     }
   },
+  computed: {
+    ...mapState(['searchRes'])
+  },
   created () {
-    console.log(this.searchContent)
+    console.log(this.searchRes)
   }
 }
 </script>

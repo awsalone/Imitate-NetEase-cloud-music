@@ -30,19 +30,28 @@
         <i class="iconfont icon-icon- search" @click="$router.push('/search')"></i>
       </template>
     </HeaderTop>
-    <keep-alive :include="['/discovery','/mine','/movie','/town']">
-      <router-view></router-view>
-    </keep-alive>
+    <router-view :class="pseduExist?'pseudoContain':''"></router-view>
     <Player></Player>
   </div>
 </template>
 <script>
 import HeaderTop from './components/headerTop/headerTop'
 import Player from './components/player/player'
+import { mapState } from 'vuex'
 export default {
   components: {
     HeaderTop,
     Player
+  },
+  computed: {
+    ...mapState(['songDetail']),
+    pseduExist () {
+      if (Object.keys(this.songDetail).length) {
+        return true
+      } else {
+        return false
+      }
+    }
   }
 }
 </script>
@@ -83,6 +92,13 @@ export default {
         transform: translateX(10px);
         opacity: 0;
       }
+    }
+  }
+  .pseudoContain {
+    &::after {
+      display: block;
+      height: 60px;
+      content: '';
     }
   }
 }
