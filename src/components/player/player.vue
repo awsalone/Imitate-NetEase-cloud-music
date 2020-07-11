@@ -193,6 +193,7 @@ export default {
       const index = this.playListMode.findIndex((item) => {
         return item.id === that.songDetail.id
       })
+      // 根据播放列表中位置
       let songId = null
       if (that.playList.length === 1) {
         songId = this.playListMode[0].id
@@ -233,6 +234,12 @@ export default {
     deleteSongList () {
       this.$store.commit('delete_playList')
       this.show = false
+      this.id = ''
+      this.cTime = ''
+      this.dTime = ''
+      this.$refs.songPlayer.pause()
+      this.$refs.songPlayer.src = ''
+      clearInterval(this._inner)
       if (this.$route.meta.playerShowHide) {
         this.$router.push('/discovery')
       }
