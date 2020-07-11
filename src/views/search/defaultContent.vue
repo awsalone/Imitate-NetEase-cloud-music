@@ -6,7 +6,12 @@
         <i style="font-size:16px" class="iconfont icon-huishouzhan_huaban" @click="clearKeyword"></i>
       </div>
       <div class="historyContent">
-        <span class="hisotryItem" v-for="(item,index) in keyWords" :key="index">{{item}}</span>
+        <span
+          class="hisotryItem"
+          v-for="(item,index) in keyWords"
+          :key="index"
+          @click="defaultJump(item)"
+        >{{item}}</span>
       </div>
     </div>
     <div class="hotSearch">
@@ -53,7 +58,6 @@ export default {
       this.$emit('keyword-push', keyWord)
       this.$store.commit('receive_keywords', keyWord)
       const result = await searchContent({ keywords: keyWord })
-      console.log(keyWord)
       const res = result.result.songs
       this.$store.commit('receive_search', res)
       this.$router.push('/content')
@@ -61,6 +65,7 @@ export default {
     clearKeyword: function () {
       this.$store.commit('delete_keywords')
     }
+
   },
   created () {
     this.init()

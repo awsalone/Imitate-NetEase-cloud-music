@@ -55,7 +55,7 @@ export default {
       this.defaultKeyword = keyWord.data.realkeyword
     },
     search: async function () {
-      const item = this.keyWord ? this.keyWord : this.defaultKeyword
+      const item = this.keyWord && this.defaultKeyword !== '请输入搜索项' ? this.keyWord : this.defaultKeyword
       this.keyWord = item
       this.$store.commit('receive_keywords', item)
       const result = await searchContent({ keywords: this.keyWord })
