@@ -60,14 +60,13 @@ export default {
         let count = null
         this.tags.forEach(item => {
           count += item.name.length * 16 + 40
-        });
+        })
         this.$refs.navChild.style.width = count + 'px'
         new BScroll(this.$refs.nav, {
           click: true,
           scrollX: true
         })
       })
-
     }
   }
 
