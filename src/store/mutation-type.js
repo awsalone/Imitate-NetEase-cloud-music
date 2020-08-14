@@ -8,3 +8,4 @@ export const PLAY_ALL = 'play_all' // 播放全部
 export const RECEIVE_KEYWORDS = 'receive_keywords' // 搜索关键字
 export const RECEIVE_SEARCH = 'receive_search' // 搜索内容
 export const DELETE_KEYWORDS = 'delete_keywords' // 清空搜索历史
+export const RECEIVE_UID = 'RECEIVE_uid' // 获取用户id

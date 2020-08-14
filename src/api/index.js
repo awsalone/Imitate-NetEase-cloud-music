@@ -1,30 +1,30 @@
-import ajax from './ajax'
-const BASE_URL = '/api'
+import ajax from './$axios'
+
 // 轮播图
-export const reqBanner = (num) => ajax(`${BASE_URL}/banner?type=${num}`)
+export const reqBanner = (num) => ajax(`/banner?type=${num}`)
 // 推荐歌单
-export const reqRecSongSheet = (limit) => ajax(`${BASE_URL}/personalized?limit=${limit}`)
+export const reqRecSongSheet = (limit) => ajax(`/personalized?limit=${limit}`)
 // 歌单详情页
-export const reqSongSheetDetail = (id) => ajax(`${BASE_URL}/playlist/detail?id=${id}`)
+export const reqSongSheetDetail = (id) => ajax(`/playlist/detail?id=${id}`)
 // 歌曲详情
-export const reqSongDetail = (str) => ajax(`${BASE_URL}/song/detail`, str)
+export const reqSongDetail = (str) => ajax(`/song/detail`, { params: str })
 // 歌曲URL
-export const reqSongUrl = (str) => ajax(`${BASE_URL}/song/url`, str)
+export const reqSongUrl = (str) => ajax(`/song/url`, { params: str })
 // 获取歌词
-export const reqSongLyric = (id) => ajax(`${BASE_URL}/lyric`, id)
+export const reqSongLyric = (id) => ajax(`/lyric`, { params: id })
 // 获取推荐歌曲
-export const reqrecNewSong = () => ajax(`${BASE_URL}/personalized/newsong`)
+export const reqrecNewSong = () => ajax(`/personalized/newsong`)
 // 获取歌单广场类别
-export const reqsongSheetPg = () => ajax(`${BASE_URL}/playlist/hot`)
+export const reqsongSheetPg = () => ajax(`/playlist/hot`)
 // 获取歌单分类数据
-export const reqsongSheetTag = (data) => ajax(`${BASE_URL}/top/playlist`, data)
+export const reqsongSheetTag = (data) => ajax(`/top/playlist`, { params: data })
 // 发送验证码
-export const sendCaptcha = (data) => ajax(`${BASE_URL}/captcha/sent`, data)
+export const sendCaptcha = (data) => ajax(`/captcha/sent`, { params: data })
 // 验证验证码
-export const verifyCaptcha = ({ phone, captcha }) => ajax(`${BASE_URL}/captcha/verify`, { phone, captcha })
+export const verifyCaptcha = ({ phone, captcha }) => ajax(`/captcha/verify`, { params: { phone, captcha } })
 // 默认搜索关键词
-export const defaultKeyword = ({ time }) => ajax(`${BASE_URL}/search/default`, { time })
+export const defaultKeyword = ({ time }) => ajax(`/search/default?${time}`)
 // 热搜列表
-export const hotSearch = () => ajax(`${BASE_URL}/search/hot/detail`)
+export const hotSearch = () => ajax(`/search/hot/detail`)
 // 获取搜索内容
-export const searchContent = ({ keywords }) => ajax(`${BASE_URL}/search`, { keywords })
+export const searchContent = ({ keywords }) => ajax(`/search`, { params: keywords })

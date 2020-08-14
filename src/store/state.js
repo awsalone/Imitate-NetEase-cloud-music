@@ -6,5 +6,6 @@ export default {
   playModeNum: 0, // 播放模式
   playStateC: true, // 播放状态
   keyWords: [], // 搜索关键字历史
-  searchRes: [] // 搜索结果
+  searchRes: [], // 搜索结果
+  uid: '' // 用户id
 }

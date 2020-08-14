@@ -1,12 +1,10 @@
 import axios from 'axios'
 import config from './config.js'
 
-export default function $axios (options) {
+export default function $axios (url, data = {}, type = 'GET') {
   return new Promise((resolve, reject) => {
     const instance = axios.create({
-      baseURL: config.baseURL,
-      headers: {},
-      transformResponse: [function (data) { }]
+      baseURL: config.baseURL
     })
     // 请求拦截
     instance.interceptors.request.use(
@@ -36,16 +34,35 @@ export default function $axios (options) {
         } else {
           data = response.data
         }
-        switch (data.code){
+        switch (data.code) {
           case '':
-          break;
+            break
           default: ;
         }
         return data
-      }
-      err => {
-        
+      },
+      error => {
+        return Promise.reject(error)
       }
     )
+    // let promise
+    // if (type === 'GET') {
+    //   let datastr = ''
+    //   Object.keys(data).forEach(key => {
+    //     datastr += key + '=' + data[key] + '&'
+    //   })
+    //   if (datastr !== '') {
+    //     datastr = datastr.substring(0, datastr.lastIndexOf('&'))
+    //     url = url + '?' + datastr
+    //   }
+    //   promise = instance.get(url, config)
+    // } else {
+    //   promise = instance.post(url, data, config)
+    // }
+    // promise.then(function (response) {
+    //   resolve(response.data)
+    // }).catch(function (error) {
+    //   reject(error)
+    // })
   })
 }

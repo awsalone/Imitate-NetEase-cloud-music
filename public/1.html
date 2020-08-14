@@ -507,5 +507,31 @@
         <div class="force-overflow"></div>
       </div>
     </div>
+    <script>
+      let o = {
+        a: 1,
+      }
+      Object.defineProperty(o, 'show', {
+        get: function() {
+          return this.a
+        },
+      })
+      Object.defineProperty(o, 'test', {
+        set: function(num) {
+          this.a += num
+        },
+      })
+      console.log(o.show)
+      o.test = 2
+      console.log(o.a)
+      function _typeof(data) {
+        let value = /\[object (\w+)\]/.exec(
+          Object.prototype.toString.call(data)
+        )
+        return value ? value[1] : ''
+      }
+      let b = 1
+      console.log(_typeof(b))
+    </script>
   </body>
 </html>
