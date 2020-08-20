@@ -14,6 +14,12 @@ const searchDefault = () => import('../views/search/defaultContent')
 const searchContent = () => import('../views/search/searchContent')
 Vue.use(VueRouter)
 
+const originalPush = VueRouter.prototype.push
+VueRouter.prototype.push = function push (location, onResolve, onReject) {
+  if (onResolve || onReject) return originalPush.call(this, location, onResolve, onReject)
+  return originalPush.call(this, location).catch(err => err)
+}
+
 const routes = [
   // 发现页 1级
   {
@@ -98,14 +104,12 @@ const routes = [
   // 登陆页
   {
     path: '/login',
+    name: 'login',
     component: login
   },
   {
     path: '/',
-    beforeEnter: (to, from, next) => {
-      const token = window.localStorage.getItem('Authorization')
-      if (token === '' || token === null) { next({ path: '/login' }) } else { next({ path: '/discovery' }) }
-    }
+    redirect: '/discovery'
   }
 ]
 

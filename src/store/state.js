@@ -7,5 +7,6 @@ export default {
   playStateC: true, // 播放状态
   keyWords: [], // 搜索关键字历史
   searchRes: [], // 搜索结果
-  uid: '' // 用户id
+  uid: '', // 用户id
+  tourist: '' // 用户游客状态
 }

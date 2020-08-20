@@ -1,12 +1,16 @@
 import axios from 'axios'
 import config from './config.js'
+import router from '../router'
 
 const instance = axios.create({
-  baseURL: config.baseURL
+  baseURL: config.baseURL,
+  withCredentials: true,
+  timeout: 5000
 })
 // 请求拦截
 instance.interceptors.request.use(
   config => {
+    return config
     // Tip: 1
     // 请求开始的时候可以结合 vuex 开启全屏的 loading 动画
 
@@ -20,16 +24,26 @@ instance.interceptors.request.use(
 
     // Tip: 3
     // 根据请求方法，序列化传来的参数，根据后端需求是否序列化
-    return config
+  },
+  error => {
+    return Promise.reject(error)
   }
 )
 // 响应拦截
 instance.interceptors.response.use(
   response => {
+    const token = window.localStorage.getItem('Authorization')
+    const tourist = window.localStorage.getItem('tourist')
+    if (token || tourist) {
+    } else {
+      // eslint-disable-next-line no-unused-expressions
+      router.push('login')
+    }
     return response.data
   },
   error => {
     return Promise.reject(error)
   }
 )
+
 export default instance

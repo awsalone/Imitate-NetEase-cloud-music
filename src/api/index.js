@@ -22,6 +22,11 @@ export const reqsongSheetTag = (data) => ajax(`/top/playlist`, { params: data })
 export const sendCaptcha = (data) => ajax(`/captcha/sent`, { params: data })
 // 验证验证码
 export const verifyCaptcha = ({ phone, captcha }) => ajax(`/captcha/verify`, { params: { phone, captcha } })
+// 修改密码
+export const modifypwd = ({ phone, captcha, password }) => ajax(`register/cellphone`, { params: { phone, password, captcha } })
+// 登陆
+export const login = ({ phone, password }) => ajax(`/login/cellphone`, { params: { phone, password } })
+
 // 默认搜索关键词
 export const defaultKeyword = ({ time }) => ajax(`/search/default?${time}`)
 // 热搜列表
