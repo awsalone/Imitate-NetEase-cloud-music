@@ -6,7 +6,7 @@ import $axios from '../../api/$axios'
 export default {
   created () {
     async function init () {
-      const result = await $axios('/login/refresh')
+      const result = await $axios('/logout')
       console.log(result)
     }
     init()

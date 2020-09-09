@@ -23,9 +23,9 @@ export const sendCaptcha = (data) => ajax(`/captcha/sent`, { params: data })
 // 验证验证码
 export const verifyCaptcha = ({ phone, captcha }) => ajax(`/captcha/verify`, { params: { phone, captcha } })
 // 修改密码
-export const modifypwd = ({ phone, captcha, password }) => ajax(`register/cellphone`, { params: { phone, password, captcha } })
+export const modifypwd = ({ phone, captcha, password }) => ajax(`register/cellphone`, { data: { phone, password, captcha }, method: 'post' })
 // 登陆
-export const login = ({ phone, password }) => ajax(`/login/cellphone`, { params: { phone, password } })
+export const login = ({ phone, password }) => ajax(`/login/cellphone`, { data: { phone, password }, method: 'post' })
 
 // 默认搜索关键词
 export const defaultKeyword = ({ time }) => ajax(`/search/default?${time}`)

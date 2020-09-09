@@ -19,7 +19,7 @@
         <el-input placeholder="请输入手机号码" v-model="ruleForm.phoneNum"></el-input>
       </el-form-item>
       <el-form-item label="密码" prop="password">
-        <el-input placeholder="请输入密码" v-model="ruleForm.password"></el-input>
+        <el-input placeholder="请输入密码" type="password" v-model="ruleForm.password"></el-input>
       </el-form-item>
       <el-button class="modifypwd" type="text" @click.prevent="togglelogin">修改密码</el-button>
 
@@ -66,7 +66,7 @@
         </el-input>
       </el-form-item>
       <el-form-item label="密码" prop="password">
-        <el-input placeholder="请输入密码" v-model="ruleForm.password"></el-input>
+        <el-input placeholder="请输入密码" type="password" v-model="ruleForm.password"></el-input>
       </el-form-item>
 
       <el-form-item>
@@ -93,7 +93,6 @@
 <script>
 import { sendCaptcha, verifyCaptcha, modifypwd, login } from '../../api/index'
 export default {
-
   data () {
     var validatorPhone = (rules, value, callback) => {
       if (/^[1](([3][0-9])|([4][5-9])|([5][0-3,5-9])|([6][5,6])|([7][0-8])|([8][0-9])|([9][1,8,9]))[0-9]{8}$/.test(value)) {
@@ -145,6 +144,7 @@ export default {
       }
     }
   },
+
   methods: {
     // get captcha
     getCaptcha: function () {
@@ -166,8 +166,15 @@ export default {
             // login
             const res = await login({ phone: this.ruleForm.phoneNum, password: this.ruleForm.password })
             if (res.code === 200) {
+              console.log(res)
+              const data = res.cookie
               window.localStorage.setItem('token', res.token)
-              this.touristStatus()
+              const remb = data.search('__remember_me')
+              const csrf = data.search('__csrf')
+              document.cookie = data.substring(0, remb)
+              document.cookie = data.substring(remb, csrf)
+              document.cookie = data.substring(csrf)
+              this.$store.commit('receive_uid', res.profile.userId)
               this.$router.push('/discovery')
             } else {
               this.$refs.ruleForm.validateField('password', (valid) => {
@@ -194,7 +201,6 @@ export default {
         }
       })
     },
-    // s
     // change button bgc
     changeBgc ({ bgcolor, color, e }) {
       e.target.style.backgroundColor = bgcolor

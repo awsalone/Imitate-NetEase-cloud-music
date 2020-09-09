@@ -2,14 +2,18 @@ import axios from 'axios'
 import config from './config.js'
 import router from '../router'
 
+axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8'
 const instance = axios.create({
   baseURL: config.baseURL,
-  withCredentials: true,
+  headers: { withCredentials: true },
   timeout: 5000
 })
 // 请求拦截
 instance.interceptors.request.use(
   config => {
+    const token = window.localStorage.getItem('token')
+    token && (config.headers.Authorization = token)
+
     return config
     // Tip: 1
     // 请求开始的时候可以结合 vuex 开启全屏的 loading 动画
@@ -32,8 +36,9 @@ instance.interceptors.request.use(
 // 响应拦截
 instance.interceptors.response.use(
   response => {
-    const token = window.localStorage.getItem('Authorization')
+    const token = window.localStorage.getItem('token')
     const tourist = window.localStorage.getItem('tourist')
+
     if (token || tourist) {
     } else {
       // eslint-disable-next-line no-unused-expressions
@@ -42,6 +47,19 @@ instance.interceptors.response.use(
     return response.data
   },
   error => {
+    const { response } = error
+    if (response) {
+      switch (response.status) {
+        case 301: // 未登录
+          break
+      }
+    } else {
+      // 服务器未返回结果
+      if (!window.navigator.online) {
+        // 断网处理： 跳转至断网页面
+        return
+      }
+    }
     return Promise.reject(error)
   }
 )
