@@ -8,5 +8,7 @@ export default {
   keyWords: [], // 搜索关键字历史
   searchRes: [], // 搜索结果
   uid: '', // 用户id
-  tourist: '' // 用户游客状态
+  tourist: '', // 用户游客状态
+  lMenu: false, // 左侧菜单栏显示状态
+  times: 0
 }

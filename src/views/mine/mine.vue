@@ -5,11 +5,13 @@
 import $axios from '../../api/$axios'
 export default {
   created () {
-    async function init () {
-      const result = await $axios('/logout')
+    const data = { keywords: '冷血' }
+    async function init (data) {
+      const result = await $axios('/search', { params: data })
+      console.log(data)
       console.log(result)
     }
-    init()
+    init(data)
   }
 }
 </script>

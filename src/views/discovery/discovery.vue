@@ -14,7 +14,7 @@
     </van-swipe>
     <!--导航-->
     <nav>
-      <span>
+      <span @click="test()">
         <span>
           <i class="iconfont icon-rilicalendar107"></i>
         </span>
@@ -147,6 +147,9 @@ export default {
 
   },
   methods: {
+    test () {
+      this.$router.push({ path: '/daliyRecSong' })
+    },
     // 获取轮播图数据
     getLoop: async function () {
       const result = await reqBanner(1)

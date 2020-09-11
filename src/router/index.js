@@ -12,6 +12,7 @@ const login = () => import('../views/login/login')
 const search = () => import('../views/search/search')
 const searchDefault = () => import('../views/search/defaultContent')
 const searchContent = () => import('../views/search/searchContent')
+const daliyRecSongs = () => import('../views/discovery/daliyRecSong/daliyRecSong')
 Vue.use(VueRouter)
 
 const originalPush = VueRouter.prototype.push
@@ -106,6 +107,11 @@ const routes = [
     path: '/login',
     name: 'login',
     component: login
+  },
+  // 每日推荐歌曲
+  {
+    path: '/daliyRecSong',
+    component: daliyRecSongs
   },
   {
     path: '/',

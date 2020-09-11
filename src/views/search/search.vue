@@ -59,7 +59,7 @@ export default {
       this.keyWord = item
       this.$store.commit('receive_keywords', item)
       const result = await searchContent({ keywords: this.keyWord })
-      const res = result.result.songs
+      const res = result.songs
       this.$store.commit('receive_search', res)
     },
     keywordPush: function (data) {
@@ -73,11 +73,10 @@ export default {
   created () {
     this.keyWord = ''
     this.init()
-    const arr = [1, 2, 3]
-    const res = arr.filter((item) => {
-      return item === 4
-    })
-    console.log(res)
+    // const arr = [1, 2, 3]
+    // const res = arr.filter((item) => {
+    //   return item === 4
+    // })
   }
 }
 </script>

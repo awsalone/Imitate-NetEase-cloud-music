@@ -60,7 +60,7 @@ export default {
     ...mapState(['searchRes'])
   },
   created () {
-    console.log(this.searchRes)
+
   }
 }
 </script>

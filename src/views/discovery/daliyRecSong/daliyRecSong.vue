@@ -7,49 +7,14 @@
           <span @click="$router.go(-1)">
             <i class="iconfont icon-jiantou3" style="font-size:20px"></i>
           </span>
-          <span>歌单</span>
-        </div>
-      </template>
-      <template #right>
-        <div class="right">
-          <span>
-            <i class="iconfont icon-icon-" style="font-size:25px"></i>
-          </span>
-          <span>
-            <i class="iconfont icon-gengduo" style="font-size:25px"></i>
-          </span>
         </div>
       </template>
     </HeaderTop>
     <!--头部-->
     <div class="title" ref="scrollBorder">
       <div class="top">
-        <div class="pic">
-          <img :src="songSheetList.playlist.coverImgUrl" />
-        </div>
-        <div class="des">
-          <div class="name">{{songSheetList.playlist.name}}</div>
-          <div class="author"></div>
-          <div class="description">{{songSheetList.playlist.description}}</div>
-        </div>
-      </div>
-      <div class="bottom">
-        <span class="vertical">
-          <i class="iconfont icon-pinglun"></i>
-          <span class="verticalText">{{songSheetList.playlist.commentCount}}</span>
-        </span>
-        <span class="vertical">
-          <i class="iconfont icon-fenxiang"></i>
-          <span class="verticalText">{{songSheetList.playlist.shareCount}}</span>
-        </span>
-        <span class="vertical">
-          <i class="iconfont icon-xiazai"></i>
-          <span class="verticalText">下载</span>
-        </span>
-        <span class="vertical">
-          <i class="iconfont icon-duoxuan"></i>
-          <span class="verticalText">多选</span>
-        </span>
+        <p>每日推荐</p>
+        <p>（此处应有背景）</p>
       </div>
     </div>
     <!-- 脱离定位部分 -->
@@ -60,17 +25,16 @@
         </span>
         <span>
           播放全部
-          <span>（共{{songSheetList.playlist.trackCount}}首）</span>
+          <span>（共{{songSheetList.length}}首）</span>
         </span>
       </div>
-      <div class="playerHeadR">+&nbsp;收藏({{songSheetList.playlist.subscribedCount}})</div>
     </div>
     <!-- 歌曲部分 -->
     <div class="songList" :class="{active:scrollState}">
       <ul>
         <li
           class="songItem"
-          v-for="(item, index) in songDetail"
+          v-for="(item, index) in songSheetList"
           :key="index"
           @click="changeSong(item.id)"
         >
@@ -78,7 +42,7 @@
             <div class="index">{{index+1}}</div>
             <div class="musicName">
               <span class="name">{{item.name}}</span>
-              <span class="author">{{item.ar[0].name}}</span>
+              <span class="author">{{item.artists[0].name}}</span>
             </div>
           </div>
           <div class="songItemR">
@@ -90,48 +54,29 @@
   </div>
 </template>
 <script>
-import { reqSongSheetDetail, reqSongDetail } from '../../api/index'
-import HeaderTop from '../../components/headerTop/headerTop'
+import { recSong } from '../../../api/index'
+import HeaderTop from '../../../components/headerTop/headerTop'
 export default {
   data () {
     return {
       songSheetList: '',
-      songListUrl: [],
-      songDetail: [],
       scrollState: '',
-      scrollHeight: '200'
+      scrollHeight: '100'
     }
   },
   components: {
     HeaderTop
   },
   methods: {
-    // 歌单
-    async getSongSheetDetail () {
-      const result = await reqSongSheetDetail(this.$route.params.id)
-      this.songSheetList = result
-    },
-    // 歌曲详情
-    async getSongDetail () {
-      const result = await reqSongDetail({ ids: this.songSheetListId })
-      this.songDetail = result.songs
-    },
     changeSong (id) {
       this.$store.dispatch('getSongDetail', { ids: id })
       this.$store.commit('receive_playState', { zt: false })
     }
   },
-  computed: {
-    songSheetListId () {
-      const list = []
-      this.songSheetList.playlist.trackIds.forEach(item => {
-        list.push(item.id)
-      })
-      return list.join(',')
-    }
-  },
-  created () {
-    this.getSongSheetDetail()
+  async created () {
+    const res = await recSong()
+    console.log(res)
+    this.songSheetList = res.recommend
   },
   mounted () {
     // fixed
@@ -145,18 +90,7 @@ export default {
     })
   },
   beforeRouteUpdate (to, from, next) {
-    this.getSongSheetDetail()
     next()
-  },
-  updated () {
-    this.$nextTick(() => {
-
-    })
-  },
-  watch: {
-    songSheetList () {
-      this.getSongDetail()
-    }
   }
 }
 </script>
@@ -173,56 +107,16 @@ export default {
         padding: 0 10px;
       }
     }
-    .right {
-      span {
-        padding: 0 10px;
-      }
-    }
   }
   // 头部
   .title {
     margin-top: 70px;
-    height: 200px;
+    height: 100px;
     width: 100%;
     .top {
-      display: flex;
-
-      .pic {
-        flex: 0 0 auto;
-        width: 100px;
-        height: 100px;
-        padding: 15px;
-        img {
-          width: 100%;
-          height: 100%;
-        }
-      }
-      .des {
-        display: flex;
-        flex-direction: column;
-        margin: 15px;
-        .description {
-          margin-top: 30px;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          height: 20px;
-          width: 150px;
-          white-space: nowrap;
-        }
-      }
-    }
-    .bottom {
-      display: flex;
-      justify-content: space-around;
-      padding: 15px;
-      .vertical {
-        display: flex;
-        flex-direction: column;
-        text-align: center;
-        .verticalText {
-          text-align: center;
-        }
-      }
+      font-size: 20px;
+      text-align: center;
+      vertical-align: middle;
     }
     i {
       font-size: 25px;
@@ -249,19 +143,6 @@ export default {
         display: inline-block;
         width: 20px;
       }
-    }
-    .playerHeadR {
-      border-radius: 20px;
-      background-color: red;
-      margin: 8px;
-      height: 40px;
-      line-height: 30px;
-      padding: 5px;
-      box-sizing: border-box;
-      vertical-align: center;
-      color: white;
-      letter-spacing: 1px;
-      font-size: 12px;
     }
   }
   // 歌曲列表

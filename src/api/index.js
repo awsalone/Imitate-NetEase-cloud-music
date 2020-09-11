@@ -26,10 +26,11 @@ export const verifyCaptcha = ({ phone, captcha }) => ajax(`/captcha/verify`, { p
 export const modifypwd = ({ phone, captcha, password }) => ajax(`register/cellphone`, { data: { phone, password, captcha }, method: 'post' })
 // 登陆
 export const login = ({ phone, password }) => ajax(`/login/cellphone`, { data: { phone, password }, method: 'post' })
-
+// 每日推荐歌曲
+export const recSong = () => ajax('/recommend/songs')
 // 默认搜索关键词
 export const defaultKeyword = ({ time }) => ajax(`/search/default?${time}`)
 // 热搜列表
 export const hotSearch = () => ajax(`/search/hot/detail`)
 // 获取搜索内容
-export const searchContent = ({ keywords }) => ajax(`/search`, { params: keywords })
+export const searchContent = (keywords) => ajax(`/search`, { params: keywords })

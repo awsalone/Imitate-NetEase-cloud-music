@@ -1,37 +1,54 @@
 <template>
   <div id="app">
-    <!--标题头部-->
-    <HeaderTop v-show="this.$route.meta.headerShow" class="headerTop" v-cloak>
-      <template #left>
-        <i class="iconfont icon-caidan_bg menu"></i>
-      </template>
-      <template #center>
-        <ul class="headernav">
-          <transition name="bigger">
-            <li>
-              <router-link to="/mine">我的</router-link>
-            </li>
-          </transition>
-          <transition name="bigger">
-            <li>
-              <router-link to="/discovery">发现</router-link>
-            </li>
-          </transition>
+    <div v-if="lMenuSta">
+      <transition name="toggleMenu">
+        <div class="leftMenu">
+          <div class="profile"></div>
+          <ul>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+          </ul>
+        </div>
+      </transition>
+      <div class="coverBlock" @click="toggleMenu"></div>
+    </div>
+    <div>
+      <!--标题头部-->
+      <HeaderTop v-show="this.$route.meta.headerShow" class="headerTop" v-cloak>
+        <template #left>
+          <i class="iconfont icon-caidan_bg menu" @click="toggleMenu"></i>
+        </template>
+        <template #center>
+          <ul class="headernav">
+            <transition name="bigger">
+              <li>
+                <router-link to="/mine">我的</router-link>
+              </li>
+            </transition>
+            <transition name="bigger">
+              <li>
+                <router-link to="/discovery">发现</router-link>
+              </li>
+            </transition>
 
-          <li>
-            <router-link to="/town">云村</router-link>
-          </li>
-          <li>
-            <router-link to="/movie">视频</router-link>
-          </li>
-        </ul>
-      </template>
-      <template #right>
-        <i class="iconfont icon-icon- search" @click="$router.push('/search')"></i>
-      </template>
-    </HeaderTop>
-    <router-view :class="pseduExist?'pseudoContain':''"></router-view>
-    <Player></Player>
+            <li>
+              <router-link to="/town">云村</router-link>
+            </li>
+            <li>
+              <router-link to="/movie">视频</router-link>
+            </li>
+          </ul>
+        </template>
+        <template #right>
+          <i class="iconfont icon-icon- search" @click="$router.push('/search')"></i>
+        </template>
+      </HeaderTop>
+      <router-view :class="pseduExist?'pseudoContain':''"></router-view>
+      <Player></Player>
+    </div>
   </div>
 </template>
 <script>
@@ -39,18 +56,32 @@ import HeaderTop from './components/headerTop/headerTop'
 import Player from './components/player/player'
 import { mapState } from 'vuex'
 export default {
+  data () {
+    return {
+      lMenuSta: ''
+    }
+  },
   components: {
     HeaderTop,
     Player
   },
   computed: {
-    ...mapState(['songDetail']),
+    ...mapState(['songDetail', 'lMenu']),
     pseduExist () {
       if (Object.keys(this.songDetail).length) {
         return true
       } else {
         return false
       }
+    }
+  },
+  mounted () {
+    this.lMenuSta = this.lMenu
+  },
+  methods: {
+    toggleMenu () {
+      this.lMenuSta = !this.lMenuSta
+      this.$store.commit('toggle_menu')
     }
   }
 }
