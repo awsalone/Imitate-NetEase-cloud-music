@@ -1,4 +1,4 @@
-import { TOGGLE_MENU, RECEIVE_SONGS, RECEIVE_SONGURL, RECEIVE_UID, RECEIVE_PLAYMODE, DELETE_PLAYLIST, DELETE_SONG, RECEIVE_PLAYSTATE, PLAY_ALL, RECEIVE_KEYWORDS, RECEIVE_SEARCH, DELETE_KEYWORDS } from './mutation-type'
+import { GET_USERINFO, TOGGLE_MENU, RECEIVE_SONGS, RECEIVE_SONGURL, RECEIVE_UID, RECEIVE_PLAYMODE, DELETE_PLAYLIST, DELETE_SONG, RECEIVE_PLAYSTATE, PLAY_ALL, RECEIVE_KEYWORDS, RECEIVE_SEARCH, DELETE_KEYWORDS } from './mutation-type'
 
 export default {
   // 当前播放和播放列表判断
@@ -61,9 +61,14 @@ export default {
   // 获取用户id
   [RECEIVE_UID] (state, uid) {
     state.uid = uid
+    window.localStorage.setItem('uid', uid)
   },
   // 切换菜单显示状态
   [TOGGLE_MENU] (state) {
     state.lMenu = !state.lMenu
+  },
+  // 用户信息
+  [GET_USERINFO] (state, info) {
+    state.userInfo = info
   }
 }

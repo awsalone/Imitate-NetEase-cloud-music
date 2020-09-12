@@ -10,3 +10,4 @@ export const RECEIVE_SEARCH = 'receive_search' // 搜索内容
 export const DELETE_KEYWORDS = 'delete_keywords' // 清空搜索历史
 export const RECEIVE_UID = 'receive_uid' // 获取用户id
 export const TOGGLE_MENU = 'toggle_menu' // 切换菜单显示
+export const GET_USERINFO = 'get_userinfo' // 用户信息

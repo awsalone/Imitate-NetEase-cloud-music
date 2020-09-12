@@ -115,4 +115,7 @@
   clear: both;
   height: 0;
   display: block;
+  overflow: hidden;
+  visibility: hidden;
+  display: block;
 }

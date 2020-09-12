@@ -75,7 +75,6 @@ export default {
   },
   async created () {
     const res = await recSong()
-    console.log(res)
     this.songSheetList = res.recommend
   },
   mounted () {

@@ -34,3 +34,7 @@ export const defaultKeyword = ({ time }) => ajax(`/search/default?${time}`)
 export const hotSearch = () => ajax(`/search/hot/detail`)
 // 获取搜索内容
 export const searchContent = (keywords) => ajax(`/search`, { params: keywords })
+// 获取用户信息
+export const getUserInfo = (uid) => ajax(`/user/detail`, { params: uid })
+// 登出
+export const userLogout = () => ajax(`/logout`)

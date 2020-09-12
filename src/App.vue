@@ -1,23 +1,34 @@
 <template>
-  <div id="app">
-    <div v-if="lMenuSta">
-      <transition name="toggleMenu">
-        <div class="leftMenu">
-          <div class="profile"></div>
-          <ul>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-          </ul>
-        </div>
-      </transition>
-      <div class="coverBlock" @click="toggleMenu"></div>
-    </div>
-    <div>
+  <div id="app" v-cloak>
+    <transition name="mask">
+      <div v-show="lMenuSta" class="leftMenuContain" @click.self="toggleMenu">
+        <transition name="slideFade">
+          <div class="leftMenu" v-show="lMenuSta">
+            <div class="profile">
+              <div v-if="userInfo" class="profileInfo">
+                <div>
+                  <img :src="userInfo.avatarUrl" />
+                </div>
+                <div class="nickname">{{userInfo.nickname}}</div>
+              </div>
+              <div v-else></div>
+            </div>
+            <ul>
+              <li></li>
+              <li></li>
+              <li></li>
+              <li></li>
+              <li></li>
+            </ul>
+            <div class="menuFooter" @click="logout">退出登陆</div>
+          </div>
+        </transition>
+      </div>
+    </transition>
+
+    <div class="right">
       <!--标题头部-->
-      <HeaderTop v-show="this.$route.meta.headerShow" class="headerTop" v-cloak>
+      <HeaderTop v-show="this.$route.meta.headerShow" class="headerTop">
         <template #left>
           <i class="iconfont icon-caidan_bg menu" @click="toggleMenu"></i>
         </template>
@@ -55,10 +66,11 @@
 import HeaderTop from './components/headerTop/headerTop'
 import Player from './components/player/player'
 import { mapState } from 'vuex'
+import { getUserInfo, userLogout } from './api/index'
 export default {
   data () {
     return {
-      lMenuSta: ''
+      lMenuSta: 'false'
     }
   },
   components: {
@@ -66,7 +78,7 @@ export default {
     Player
   },
   computed: {
-    ...mapState(['songDetail', 'lMenu']),
+    ...mapState(['songDetail', 'lMenu', 'uid', 'userInfo']),
     pseduExist () {
       if (Object.keys(this.songDetail).length) {
         return true
@@ -75,6 +87,15 @@ export default {
       }
     }
   },
+  created () {
+    this.$nextTick(async () => {
+      const uid = this.uid || window.localStorage.getItem('uid')
+      if (!this.userInfo && uid) {
+        const res = await getUserInfo({ uid: uid })
+        this.$store.commit('get_userinfo', res.profile)
+      }
+    })
+  },
   mounted () {
     this.lMenuSta = this.lMenu
   },
@@ -82,6 +103,10 @@ export default {
     toggleMenu () {
       this.lMenuSta = !this.lMenuSta
       this.$store.commit('toggle_menu')
+    },
+    logout () {
+      userLogout()
+      alert('登出成功')
     }
   }
 }
@@ -91,45 +116,102 @@ export default {
   width: 0 !important;
   height: 0;
 }
+.mask-leave-active {
+  transition-delay: 0.2s;
+}
+.slideFade-enter-active,
+.slideFade-leave-active {
+  transition: all 0.2s linear;
+}
+.slideFade-enter, .slideFade-leave-to
+/* .slideFade-leave-active for below version 2.1.8 */ {
+  transform: translateX(-70vw);
+  opacity: 0;
+}
+[v-cloak] {
+  display: none !important;
+}
 #app {
-  [v-cloak] {
-    display: none !important;
-  }
   height: 100%;
-  .headerTop {
+  // 展示页
+  // 左侧菜单弹出页
+  .leftMenuContain {
     position: fixed;
+    margin: 0;
     top: 0;
-    z-index: 2;
-    .headernav {
-      display: flex;
-      flex: 1 1 auto;
-      align-items: center;
-      justify-content: space-around;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 2020;
+    .leftMenu {
+      width: 70vw;
+      height: 100%;
       background-color: #fff;
-      .router-link-active {
-        font-size: 25px;
-        color: black;
+      position: relative;
+
+      .profile {
+        .profileInfo {
+          display: flex;
+          padding: 10px;
+          img {
+            width: 4rem;
+            height: 4rem;
+            display: block;
+            border-radius: 50%;
+          }
+          .nickname {
+            line-height: 4rem;
+            padding-left: 1rem;
+            font-size: 1.1rem;
+          }
+        }
       }
-      // 没效果，之后再调整
-      .bigger-enter-active,
-      .bigger-leave-active {
-        transition: all 5s ease;
-      }
-      .bigger-enter,
-      .bigger-leave-to {
-        color: #7e8c8d;
-        font-size: 16px;
-        background-color: red;
-        transform: translateX(10px);
-        opacity: 0;
+      .menuFooter {
+        position: absolute;
+        bottom: 0;
       }
     }
   }
-  .pseudoContain {
-    &::after {
-      display: block;
-      height: 60px;
-      content: '';
+
+  .right {
+    height: 100%;
+    .headerTop {
+      position: fixed;
+      top: 0;
+      z-index: 2;
+
+      .headernav {
+        display: flex;
+        flex: 1 1 auto;
+        align-items: center;
+        justify-content: space-around;
+        background-color: #fff;
+        .router-link-active {
+          font-size: 25px;
+          color: black;
+        }
+        // 没效果，之后再调整
+        .bigger-enter-active,
+        .bigger-leave-active {
+          transition: all 5s ease;
+        }
+        .bigger-enter,
+        .bigger-leave-to {
+          color: #7e8c8d;
+          font-size: 16px;
+          background-color: red;
+          transform: translateX(10px);
+          opacity: 0;
+        }
+      }
+    }
+    .pseudoContain {
+      &::after {
+        display: block;
+        height: 60px;
+        content: '';
+      }
     }
   }
 }

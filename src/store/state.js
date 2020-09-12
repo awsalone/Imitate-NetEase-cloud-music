@@ -10,5 +10,6 @@ export default {
   uid: '', // 用户id
   tourist: '', // 用户游客状态
   lMenu: false, // 左侧菜单栏显示状态
+  userInfo: '', // 用户信息
   times: 0
 }
