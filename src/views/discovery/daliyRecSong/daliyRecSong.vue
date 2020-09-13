@@ -93,7 +93,7 @@ export default {
   }
 }
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .sScontainer {
   // 标题
   margin: 0 !important;

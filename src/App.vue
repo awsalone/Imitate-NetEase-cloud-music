@@ -1,7 +1,7 @@
 <template>
   <div id="app" v-cloak>
     <transition name="mask">
-      <div v-show="lMenuSta" class="leftMenuContain" @click.self="toggleMenu">
+      <div v-show="lMenuSta" class="leftMenuContain" @click.self="toggleMenu" v-cloak>
         <transition name="slideFade">
           <div class="leftMenu" v-show="lMenuSta">
             <div class="profile">
@@ -26,7 +26,7 @@
       </div>
     </transition>
 
-    <div class="right">
+    <div class="rightApp">
       <!--标题头部-->
       <HeaderTop v-show="this.$route.meta.headerShow" class="headerTop">
         <template #left>
@@ -116,18 +116,34 @@ export default {
   width: 0 !important;
   height: 0;
 }
-.mask-leave-active {
-  transition-delay: 0.2s;
+// .mask-enter,
+// .mask-leave-to {
+//   opacity: 0;
+// }
+// .mask-leave-active {
+//   transition-delay: 0.3s;
+// }
+@keyframes fade {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-70vw);
+  }
 }
-.slideFade-enter-active,
+.slideFade-enter-active {
+  animation: fade 0.3s reverse;
+  opacity: 1;
+}
 .slideFade-leave-active {
-  transition: all 0.2s linear;
+  animation: fade 0.3s;
+  opacity: 1;
 }
-.slideFade-enter, .slideFade-leave-to
-/* .slideFade-leave-active for below version 2.1.8 */ {
-  transform: translateX(-70vw);
+.slide-enter,
+.slide-leave-to {
   opacity: 0;
 }
+
 [v-cloak] {
   display: none !important;
 }
@@ -174,7 +190,7 @@ export default {
     }
   }
 
-  .right {
+  .rightApp {
     height: 100%;
     .headerTop {
       position: fixed;

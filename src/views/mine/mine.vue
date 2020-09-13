@@ -2,7 +2,7 @@
   <div id="example-1">
     <button @click="show = !show">Toggle render</button>
     <transition name="slideFade">
-      <p v-if="show">hello</p>
+      <p v-show="show">hello</p>
     </transition>
   </div>
 </template>
