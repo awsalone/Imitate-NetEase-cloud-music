@@ -14,7 +14,7 @@
     </van-swipe>
     <!--导航-->
     <nav>
-      <span @click="test()">
+      <span @click="daliyRecSongs()">
         <span>
           <i class="iconfont icon-rilicalendar107"></i>
         </span>
@@ -147,8 +147,22 @@ export default {
 
   },
   methods: {
-    test () {
-      this.$router.push({ path: '/daliyRecSong' })
+    daliyRecSongs () {
+      const flag = this.uid || window.localStorage.getItem('uid')
+      if (flag) {
+        this.$router.push({ path: '/daliyRecSong' })
+      } else {
+        this.$message.confirm('未登录，前往登陆？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          customClass: 'messageBox'
+        }).then(() => {
+          window.sessionStorage.removeItem('tourist')
+          this.$router.push({ path: '/login' })
+        }).catch(() => {
+          return false
+        })
+      }
     },
     // 获取轮播图数据
     getLoop: async function () {
@@ -195,7 +209,7 @@ export default {
     this.playState = this.playStateC
   },
   computed: {
-    ...mapState(['playStateC', 'songDetail', 'playStateC']),
+    ...mapState(['playStateC', 'songDetail', 'playStateC', 'uid']),
     active: function () {
       let state = ''
       if (this.curId === this.songDetail.id && !this.playStateC) {
@@ -226,6 +240,10 @@ export default {
 </script>
 <style lang="scss">
 @import url('../../static/support.css');
+// 消息盒子
+.messageBox {
+  width: 70vw;
+}
 .containerDis {
   display: flex;
   flex-direction: column;

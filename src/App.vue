@@ -1,7 +1,13 @@
 <template>
   <div id="app" v-cloak>
     <transition name="mask">
-      <div v-show="lMenuSta" class="leftMenuContain" @click.self="toggleMenu" v-cloak>
+      <div
+        v-show="lMenuSta"
+        class="leftMenuContain"
+        @touchmove.prevent
+        @click.self="toggleMenu"
+        v-cloak
+      >
         <transition name="slideFade">
           <div class="leftMenu" v-show="lMenuSta">
             <div class="profile">
@@ -11,7 +17,9 @@
                 </div>
                 <div class="nickname">{{userInfo.nickname}}</div>
               </div>
-              <div v-else></div>
+              <div v-else>
+                <button class="loginClick" @click="login">点击登录</button>
+              </div>
             </div>
             <ul>
               <li></li>
@@ -88,13 +96,7 @@ export default {
     }
   },
   created () {
-    this.$nextTick(async () => {
-      const uid = this.uid || window.localStorage.getItem('uid')
-      if (!this.userInfo && uid) {
-        const res = await getUserInfo({ uid: uid })
-        this.$store.commit('get_userinfo', res.profile)
-      }
-    })
+    this.getUserProfile()
   },
   mounted () {
     this.lMenuSta = this.lMenu
@@ -104,9 +106,31 @@ export default {
       this.lMenuSta = !this.lMenuSta
       this.$store.commit('toggle_menu')
     },
+    login () {
+      this.toggleMenu()
+      window.localStorage.removeItem('tourist')
+      this.$router.push('/login')
+    },
     logout () {
+      this.toggleMenu()
       userLogout()
-      alert('登出成功')
+      this.$store.commit('get_userinfo', '')
+      window.localStorage.removeItem('uid')
+      window.localStorage.removeItem('token')
+      window.localStorage.removeItem('tourist')
+      this.$router.push('/login')
+    },
+    async getUserProfile () {
+      const uid = this.uid || window.localStorage.getItem('uid')
+      if (!this.userInfo && uid) {
+        const res = await getUserInfo({ uid: uid })
+        this.$store.commit('get_userinfo', res.profile)
+      }
+    }
+  },
+  watch: {
+    uid: function () {
+      this.getUserProfile()
     }
   }
 }
@@ -182,10 +206,26 @@ export default {
             font-size: 1.1rem;
           }
         }
+        .loginClick {
+          background-color: red;
+          border-radius: 20px;
+          padding: 10px 20px;
+          border: 0;
+          color: #fff;
+          position: absolute;
+          margin-top: 50px;
+          left: 50%;
+          transform: translateX(-50%);
+        }
       }
       .menuFooter {
+        width: 100%;
         position: absolute;
         bottom: 0;
+        text-align: center;
+        font-size: 20px;
+        padding: 10px 0;
+        border-top: 1px solid #7e8c8d;
       }
     }
   }

@@ -4,7 +4,7 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import VueLazyLoad from 'vue-lazyload'
-import { Button, Form, FormItem, input } from 'element-ui'
+import { Button, Form, FormItem, input, MessageBox } from 'element-ui'
 
 Vue.config.productionTip = false
 Vue.use(VueLazyLoad)
@@ -13,6 +13,10 @@ Vue.use(Form)
 Vue.use(FormItem)
 Vue.use(input)
 
+MessageBox.install = function (Vue, options) {
+  Vue.prototype.$message = MessageBox
+}
+Vue.use(MessageBox)
 new Vue({
   router,
   store,
