@@ -130,4 +130,16 @@ const router = new VueRouter({
   }
 })
 
+router.beforeEach((to, from, next) => {
+  const token = window.localStorage.getItem('token')
+  const tourist = window.localStorage.getItem('tourist')
+  const flag = token || tourist
+  if (to.name !== 'login' && !flag) {
+    next({ name: 'login' })
+  } else {
+    console.log(token, tourist)
+    next()
+  }
+})
+
 export default router

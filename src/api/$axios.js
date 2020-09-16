@@ -1,6 +1,5 @@
 import axios from 'axios'
 import config from './config.js'
-import router from '../router'
 
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8'
 const instance = axios.create({
@@ -36,14 +35,6 @@ instance.interceptors.request.use(
 // 响应拦截
 instance.interceptors.response.use(
   response => {
-    const token = window.localStorage.getItem('token')
-    const tourist = window.localStorage.getItem('tourist')
-
-    if (token || tourist) {
-    } else {
-      // eslint-disable-next-line no-unused-expressions
-      router.push('login')
-    }
     return response.data
   },
   error => {
