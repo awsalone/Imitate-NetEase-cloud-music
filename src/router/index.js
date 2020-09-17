@@ -13,6 +13,7 @@ const search = () => import('../views/search/search')
 const searchDefault = () => import('../views/search/defaultContent')
 const searchContent = () => import('../views/search/searchContent')
 const daliyRecSongs = () => import('../views/discovery/daliyRecSong/daliyRecSong')
+const songComment = () => import('../views/playerList/songComment')
 Vue.use(VueRouter)
 
 const originalPush = VueRouter.prototype.push
@@ -113,6 +114,14 @@ const routes = [
     path: '/daliyRecSong',
     component: daliyRecSongs
   },
+  // 歌曲评论页
+  {
+    path: '/songComment:id',
+    component: songComment,
+    meta: {
+      playerHide: true
+    }
+  },
   {
     path: '/',
     redirect: '/discovery'
@@ -137,7 +146,6 @@ router.beforeEach((to, from, next) => {
   if (to.name !== 'login' && !flag) {
     next({ name: 'login' })
   } else {
-    console.log(token, tourist)
     next()
   }
 })

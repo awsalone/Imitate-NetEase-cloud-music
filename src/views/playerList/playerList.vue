@@ -29,6 +29,14 @@
       <!-- 歌词 -->
       <div class="lyricContain" v-else @click.stop="middleShow = !middleShow">未获取到歌词</div>
     </div>
+    <div>
+      <ul class="bottomMenu">
+        <li @click="commentPage()">
+          <span class="bottomMenuItem">评论</span>
+        </li>
+        <li></li>
+      </ul>
+    </div>
     <!-- 底部播放器 -->
   </div>
 </template>
@@ -60,6 +68,9 @@ export default {
     // 初始化
     init (id) {
       this.$store.dispatch('getSongDetail', { ids: id })
+    },
+    commentPage () {
+      this.$router.push(`/songComment${this.$route.params.id}`)
     }
   },
   computed: {
@@ -70,7 +81,8 @@ export default {
     // 获取歌曲歌手名
     songDetail: function () {
       this.songAuthor = this.songDetail.ar[0].name
-      this.songPic = `url(${this.songDetail.al.picUrl})`
+      this.songPic = `url (${this.songDetail.al.picUrl
+        })`
       this.id = this.songDetail.id
     },
     // 动态路由参数改变的渲染
@@ -156,6 +168,12 @@ export default {
         }
       }
     }
+  }
+  .bottomMenu {
+    position: absolute;
+    bottom: 100px;
+    background-color: #ccc;
+    width: 100%;
   }
   .lyricContain {
     text-align: center;

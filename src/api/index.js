@@ -38,3 +38,5 @@ export const searchContent = (keywords) => ajax(`/search`, { params: keywords })
 export const getUserInfo = (uid) => ajax(`/user/detail`, { params: uid })
 // 登出
 export const userLogout = () => ajax(`/logout`)
+// 获取歌曲评论
+export const getSongComment = ({ id, before = 0 }) => ajax(`/comment/music`, { params: { id, before } })

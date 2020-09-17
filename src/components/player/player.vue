@@ -1,5 +1,5 @@
 <template>
-  <div id="container">
+  <div id="container" :class="{playerShow: !!this.$route.meta.playerHide}">
     <audio :src="songUrl" ref="songPlayer" id="songPlayer"></audio>
     <!-- 播放页面底部 -->
     <div class="player" v-if="this.$route.meta.playerShowHide">
@@ -333,6 +333,9 @@ export default {
 @import url('../../static/support.css');
 
 #container {
+  &.playerShow {
+    visibility: hidden;
+  }
   .musicPlayer {
     display: flex;
     position: fixed;

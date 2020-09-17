@@ -1,5 +1,6 @@
 <template>
   <div id="app" v-cloak>
+    <!-- 右侧弹出菜单栏-->
     <transition name="mask">
       <div
         v-show="lMenuSta"
