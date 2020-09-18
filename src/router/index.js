@@ -116,6 +116,7 @@ const routes = [
   },
   // 歌曲评论页
   {
+    name: 'sComment',
     path: '/songComment:id',
     component: songComment,
     meta: {

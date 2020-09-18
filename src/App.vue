@@ -89,7 +89,8 @@ export default {
   computed: {
     ...mapState(['songDetail', 'lMenu', 'uid', 'userInfo']),
     pseduExist () {
-      if (Object.keys(this.songDetail).length) {
+      const flag = this.$route.name === 'sComment'
+      if (Object.keys(this.songDetail).length && !flag) {
         return true
       } else {
         return false
@@ -101,8 +102,17 @@ export default {
   },
   mounted () {
     this.lMenuSta = this.lMenu
+    // window.addEventListener('scroll', this.scrollTest)
   },
   methods: {
+    scrollTest () {
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
+      const clientHeight = document.documentElement.clientHeight || window.innerHeight
+      const scrollHeight = document.body.scrollHeight || document.documentElement.scrollHeight
+      if (scrollTop + clientHeight >= scrollHeight + 70) {
+        console.log('loading')
+      }
+    },
     toggleMenu () {
       this.lMenuSta = !this.lMenuSta
       this.$store.commit('toggle_menu')

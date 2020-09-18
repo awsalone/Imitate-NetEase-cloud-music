@@ -45,13 +45,18 @@ export default {
     const res = await getSongComment(a)
     console.log(res)
     this.comment = res
+    this.beforeData = this.comment.comments[this.comment.comments.length - 1].time
   },
   mounted () {
-
+    window.addEventListener('scroll', this.scrollTest)
+  },
+  beforeDestroy () {
+    window.removeEventListener('scroll', this.scrollTest)
   },
   data () {
     return {
-      comment: {}
+      comment: {},
+      beforeData: ''
     }
   },
   filters: {
@@ -63,6 +68,20 @@ export default {
         const day = time.getDate()
         return `${year}年${month}月${day}日`
       }
+  },
+  methods: {
+    async scrollTest () {
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
+      const clientHeight = document.documentElement.clientHeight || window.innerHeight
+      const scrollHeight = document.body.scrollHeight || document.documentElement.scrollHeight
+      if (scrollTop + clientHeight >= scrollHeight + 70) {
+        const data = { id: this.$route.params.id, before: this.beforeData }
+        const res = await getSongComment(data)
+        this.comment.comments = [...this.comment.comments, ...res.comments]
+        console.log('评论刷新')
+      }
+    }
+
   }
 }
 </script>
