@@ -11,5 +11,5 @@ export default {
   tourist: '', // 用户游客状态
   lMenu: false, // 左侧菜单栏显示状态
   userInfo: '', // 用户信息
-  times: 0
+  likeListIds: false // 喜欢音乐列表
 }

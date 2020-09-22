@@ -32,9 +32,27 @@
     <div>
       <ul class="bottomMenu">
         <li @click="commentPage()">
-          <span class="bottomMenuItem">评论</span>
+          <div class="bottomMenuItem">评论</div>
         </li>
-        <li></li>
+        <li>
+          <div class="bottomFav" @click="toggleLoveClick" :class="{toggleLove:loved}">
+            <svg viewBox="3.5 5 25 25">
+              <path
+                class="lovePic"
+                stroke="lavender"
+                fill="none"
+                stroke-width="1"
+                d="M20.5,9.5
+        c-1.955,0,-3.83,1.268,-4.5,3
+        c-0.67,-1.732,-2.547,-3,-4.5,-3
+        C8.957,9.5,7,11.432,7,14
+        c0,3.53,3.793,6.257,9,11.5
+        c5.207,-5.242,9,-7.97,9,-11.5
+        C25,11.432,23.043,9.5,20.5,9.5z"
+              />
+            </svg>
+          </div>
+        </li>
       </ul>
     </div>
     <!-- 底部播放器 -->
@@ -42,17 +60,17 @@
 </template>
 
 <script>
-// eslint-disable-next-line prefer-const
 import HeaderTop from '../../components/headerTop/headerTop'
 import { mapState } from 'vuex'
-import { reqSongLyric } from '../../api/index'
+import { reqSongLyric, toggleFav, favSongList } from '../../api/index'
 export default {
   data () {
     return {
       songAuthor: '', // 作者
       songPic: '',
       middleShow: true, // true cd播放 false 歌词界面
-      id: ''
+      id: '',
+      loved: false
     }
   },
   components: {
@@ -60,6 +78,30 @@ export default {
   },
 
   methods: {
+    // 喜欢状态切换
+    toggleLoveClick () {
+      this.loved = !this.loved
+      const data = { id: this.$route.params.id, like: this.loved }
+      console.log(data)
+      toggleFav(data)
+      setTimeout(() => {
+        this.getfavSongList()
+      }, 1)
+    },
+    // 获取喜欢音乐列表
+    getfavSongList: async function () {
+      const id = window.localStorage.getItem('uid') || this.uid
+      const date = new Date().getTime()
+      const uid = { uid: id, timestamp: date }
+      console.log('点击切换触发喜欢列表请求', uid)
+      if (id) {
+        const res = await favSongList(uid)
+        console.log('返回的喜欢列表', res)
+        this.$store.commit('get_likelist', res.ids)
+      } else {
+        return false
+      }
+    },
     // 歌词
     async getLyric () {
       const result = await reqSongLyric({ id: this.$route.params.id })
@@ -71,18 +113,28 @@ export default {
     },
     commentPage () {
       this.$router.push(`/songComment${this.$route.params.id}`)
+    },
+    judgeLoved (id) {
+      if (this.likeListIds) {
+        const res = JSON.parse(JSON.stringify(this.likeListIds)).includes(id - 0)
+        console.log(this.likeListIds, res, 'init时数据')
+        if (res) {
+          this.loved = true
+        } else {
+          this.loved = false
+        }
+      }
     }
   },
   computed: {
-    ...mapState(['songDetail', 'playStateC'])
+    ...mapState(['songDetail', 'playStateC', 'likeListIds'])
   },
 
   watch: {
     // 获取歌曲歌手名
     songDetail: function () {
       this.songAuthor = this.songDetail.ar[0].name
-      this.songPic = `url (${this.songDetail.al.picUrl
-        })`
+      this.songPic = `url(${this.songDetail.al.picUrl})`
       this.id = this.songDetail.id
     },
     // 动态路由参数改变的渲染
@@ -94,10 +146,16 @@ export default {
       this.init(this.id)
     }
   },
+  // created(){
+  //   let id = this.$route.params.id
+
+  // },
   mounted () {
     this.getLyric()
     this.id = this.$route.params.id
     this.init(this.id)
+    this.getfavSongList(this.id)
+    this.judgeLoved(this.id)
   }
 }
 </script>
@@ -111,16 +169,21 @@ export default {
     transform: rotate(360deg);
   }
 }
+
 .contain {
   height: 100%;
+  overflow: hidden;
   .background {
     position: absolute;
-    height: 100%;
-    width: 100%;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
     filter: blur(50px);
+    transform: scale(1.3);
     z-index: -1;
   }
   .leftContain {
@@ -169,12 +232,29 @@ export default {
       }
     }
   }
+  // 底部导航
   .bottomMenu {
     position: absolute;
     bottom: 100px;
-    background-color: #ccc;
     width: 100%;
+    height: 60px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+
+    .bottomFav {
+      width: 30px;
+      height: 30px;
+      vertical-align: middle;
+      &.toggleLove {
+        .lovePic {
+          fill: red;
+          stroke-width: 0;
+        }
+      }
+    }
   }
+  // 歌词
   .lyricContain {
     text-align: center;
     top: 70px;

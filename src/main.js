@@ -16,6 +16,7 @@ Vue.use(input)
 MessageBox.install = function (Vue, options) {
   Vue.prototype.$message = MessageBox
 }
+
 Vue.use(MessageBox)
 new Vue({
   router,

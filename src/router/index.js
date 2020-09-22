@@ -112,7 +112,16 @@ const routes = [
   // 每日推荐歌曲
   {
     path: '/daliyRecSong',
-    component: daliyRecSongs
+    component: daliyRecSongs,
+    beforeEnter (to, from, next) {
+      const flag = router.app.$options.store.state.uid || window.localStorage.getItem('uid')
+      if (flag) {
+        next()
+      } else {
+        window.localStorage.removeItem('tourist')
+        next({ path: '/' })
+      }
+    }
   },
   // 歌曲评论页
   {

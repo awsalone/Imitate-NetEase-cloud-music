@@ -148,21 +148,7 @@ export default {
   },
   methods: {
     daliyRecSongs () {
-      const flag = this.uid || window.localStorage.getItem('uid')
-      if (flag) {
-        this.$router.push({ path: '/daliyRecSong' })
-      } else {
-        this.$message.confirm('未登录，前往登陆？', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          customClass: 'messageBox'
-        }).then(() => {
-          window.sessionStorage.removeItem('tourist')
-          this.$router.push({ path: '/login' })
-        }).catch(() => {
-          return false
-        })
-      }
+      this.$router.push({ path: '/daliyRecSong' })
     },
     // 获取轮播图数据
     getLoop: async function () {
@@ -202,14 +188,16 @@ export default {
       this.changeSong(id)
     }
   },
-  mounted () {
+  created () {
     this.getLoop()
     this.getrecSongList()
     this.getrecSong()
+  },
+  mounted () {
     this.playState = this.playStateC
   },
   computed: {
-    ...mapState(['playStateC', 'songDetail', 'playStateC', 'uid']),
+    ...mapState(['playStateC', 'songDetail', 'playStateC', 'uid', 'likeListIds']),
     active: function () {
       let state = ''
       if (this.curId === this.songDetail.id && !this.playStateC) {

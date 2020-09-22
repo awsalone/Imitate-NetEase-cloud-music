@@ -78,7 +78,6 @@ export default {
         const data = { id: this.$route.params.id, before: this.beforeData }
         const res = await getSongComment(data)
         this.comment.comments = [...this.comment.comments, ...res.comments]
-        console.log('评论刷新')
       }
     }
 

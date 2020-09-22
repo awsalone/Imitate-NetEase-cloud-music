@@ -75,7 +75,8 @@
 import HeaderTop from './components/headerTop/headerTop'
 import Player from './components/player/player'
 import { mapState } from 'vuex'
-import { getUserInfo, userLogout } from './api/index'
+import { getUserInfo, userLogout, favSongList } from './api/index'
+
 export default {
   data () {
     return {
@@ -101,8 +102,9 @@ export default {
     this.getUserProfile()
   },
   mounted () {
+    // eslint-disable-next-line no-unused-expressions
+    this.getfavSongList()
     this.lMenuSta = this.lMenu
-    // window.addEventListener('scroll', this.scrollTest)
   },
   methods: {
     scrollTest () {
@@ -136,6 +138,19 @@ export default {
       if (!this.userInfo && uid) {
         const res = await getUserInfo({ uid: uid })
         this.$store.commit('get_userinfo', res.profile)
+      }
+    },
+    // 获取喜欢音乐列表
+    getfavSongList: async function () {
+      const id = window.localStorage.getItem('uid') || this.uid
+      const date = new Date().getTime()
+      const uid = { uid: id, timestamp: date }
+      if (id) {
+        const res = await favSongList(uid)
+        this.$store.commit('get_likelist', res.ids)
+        console.log('根组件返回的喜欢列表', res)
+      } else {
+        return false
       }
     }
   },
