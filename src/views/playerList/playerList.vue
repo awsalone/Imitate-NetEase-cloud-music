@@ -1,5 +1,5 @@
 <template>
-  <div class="contain">
+  <div class="contain" @touchmove.prevent>
     <!-- 背景 -->
     <div class="background" :style="{backgroundImage:songPic}"></div>
     <!-- 头部 -->
@@ -32,7 +32,9 @@
     <div>
       <ul class="bottomMenu">
         <li @click="commentPage()">
-          <div class="bottomMenuItem">评论</div>
+          <div class="bottomMenuItem">
+            <i class="iconfont icon-pinglun"></i>
+          </div>
         </li>
         <li>
           <div class="bottomFav" @click="toggleLoveClick" :class="{toggleLove:loved}">
@@ -82,7 +84,6 @@ export default {
     toggleLoveClick () {
       this.loved = !this.loved
       const data = { id: this.$route.params.id, like: this.loved }
-      console.log(data)
       toggleFav(data)
       setTimeout(() => {
         this.getfavSongList()
@@ -93,10 +94,8 @@ export default {
       const id = window.localStorage.getItem('uid') || this.uid
       const date = new Date().getTime()
       const uid = { uid: id, timestamp: date }
-      console.log('点击切换触发喜欢列表请求', uid)
       if (id) {
         const res = await favSongList(uid)
-        console.log('返回的喜欢列表', res)
         this.$store.commit('get_likelist', res.ids)
       } else {
         return false
@@ -117,7 +116,6 @@ export default {
     judgeLoved (id) {
       if (this.likeListIds) {
         const res = JSON.parse(JSON.stringify(this.likeListIds)).includes(id - 0)
-        console.log(this.likeListIds, res, 'init时数据')
         if (res) {
           this.loved = true
         } else {
@@ -173,6 +171,10 @@ export default {
 .contain {
   height: 100%;
   overflow: hidden;
+  .iconfont {
+    color: lavender;
+    font-size: 30px;
+  }
   .background {
     position: absolute;
     top: 0;
@@ -182,7 +184,8 @@ export default {
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
-    filter: blur(50px);
+    -webkit-filter: blur(50px) brightness(0.8); /* Chrome, Safari, Opera */
+    filter: blur(50px) brightness(0.8);
     transform: scale(1.3);
     z-index: -1;
   }
@@ -193,9 +196,10 @@ export default {
       margin: 0 10px;
     }
     .titleName {
+      color: #ccc;
       .author {
         font-size: 12px;
-        color: #ccc;
+
         margin-top: 3px;
       }
     }

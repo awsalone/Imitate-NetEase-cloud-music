@@ -404,6 +404,7 @@ export default {
     bottom: 0;
     height: 80px;
     width: 100%;
+    color: #fff;
     i {
       font-size: 30px;
     }
