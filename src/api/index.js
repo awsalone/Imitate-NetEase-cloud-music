@@ -44,3 +44,5 @@ export const getSongComment = ({ id, before = 0 }) => ajax(`/comment/music`, { p
 export const toggleFav = ({ id, like = true }) => ajax(`/like`, { params: { id, like } })
 // 喜欢音乐列表
 export const favSongList = ({ uid, timestamp }) => ajax(`/likelist`, { params: { uid, timestamp } })
+// 获取用户歌单
+export const getUserSonglist = ({ uid, timestamp }) => ajax(`/user/playlist`, { params: { uid, timestamp } })
