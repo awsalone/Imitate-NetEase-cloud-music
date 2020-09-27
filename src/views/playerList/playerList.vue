@@ -6,7 +6,7 @@
     <HeaderTop style="backgroundColor:rgba(0,0,0,0)">
       <template #left>
         <div class="leftContain">
-          <span @click="$router.go(-1)">
+          <span @click="routerpush()">
             <i class="iconfont icon-jiantou3" style="font-size:20px"></i>
           </span>
           <span class="titleName">
@@ -80,6 +80,9 @@ export default {
   },
 
   methods: {
+    routerpush () {
+      this.$router.go(-1)
+    },
     // 喜欢状态切换
     toggleLoveClick () {
       this.loved = !this.loved
@@ -131,14 +134,15 @@ export default {
   watch: {
     // 获取歌曲歌手名
     songDetail: function () {
-      this.songAuthor = this.songDetail.ar[0].name
-      this.songPic = `url(${this.songDetail.al.picUrl})`
-      this.id = this.songDetail.id
+      console.log(this.songDetail)
+      console.log(this.songDetail.length)
+      if (Object.keys(this.songDetail).length) {
+        this.songAuthor = this.songDetail.ar[0].name
+        this.songPic = `url(${this.songDetail.al.picUrl})`
+        this.id = this.songDetail.id
+      }
     },
-    // 动态路由参数改变的渲染
-    $route (to, from) {
-      this.init(this.$route.params.id)
-    },
+
     // 监听页面内id变化重新渲染
     id: function () {
       this.init(this.id)

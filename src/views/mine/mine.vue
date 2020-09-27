@@ -13,7 +13,7 @@
     </div>
     <div class="content">
       <card moreInfo class="contItem">
-        <cardItems>
+        <cardItems @click.native.stop="routerPush(favSonglist.id)">
           <div class="songlistItem">
             <div class="pic">
               <img :src="favSonglist.coverImgUrl" />
@@ -26,7 +26,12 @@
         </cardItems>
       </card>
       <card moreInfo titleShow class="contItem" titlename="创建歌单">
-        <cardItems moreInfo v-for="(item,index) in createSonglist" :key="index">
+        <cardItems
+          moreInfo
+          v-for="(item,index) in createSonglist"
+          :key="index"
+          @click.native.stop="routerPush(item.id)"
+        >
           <div class="songlistItem">
             <div class="pic">
               <img :src="item.coverImgUrl" />
@@ -39,7 +44,12 @@
         </cardItems>
       </card>
       <card moreInfo titleShow class="contItem" titlename="收藏歌单">
-        <cardItems moreInfo v-for="(item,index) in collectSonglist" :key="index">
+        <cardItems
+          moreInfo
+          v-for="(item,index) in collectSonglist"
+          :key="index"
+          @click.native.stop="routerPush(item.id)"
+        >
           <div class="songlistItem">
             <div class="pic">
               <img :src="item.coverImgUrl" />
@@ -78,6 +88,9 @@ export default {
     login () {
       window.localStorage.removeItem('tourist')
       this.$router.push('/login')
+    },
+    routerPush (id) {
+      this.$router.push(`/songSheet/${id}`)
     }
 
   },
@@ -85,7 +98,6 @@ export default {
     const id = this.uid || window.localStorage.getItem('uid')
     const time = JSON.parse(JSON.stringify(new Date()))
     const res = await getUserSonglist({ uid: id, timestamp: time })
-    console.log(res)
     const songlist = res.playlist
     this.favSonglist = res.playlist[0]
     let borderIndex

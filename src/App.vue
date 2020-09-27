@@ -66,7 +66,9 @@
           <i class="iconfont icon-icon- search" @click="$router.push('/search')"></i>
         </template>
       </HeaderTop>
-      <router-view :class="pseduExist?'pseudoContain':''"></router-view>
+      <keep-alive>
+        <router-view :class="pseduExist?'pseudoContain':''" :key="this.$route.params.id"></router-view>
+      </keep-alive>
       <Player></Player>
     </div>
   </div>
