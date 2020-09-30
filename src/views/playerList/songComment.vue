@@ -10,7 +10,7 @@
         </div>
       </template>
     </HeaderTop>
-    <div class="sCommentContainer" v-if="comment">
+    <div class="sCommentContainer">
       <ul>
         <li>
           <div v-for="(item, index) in comment.comments" :key="index" class="sCommentItem">

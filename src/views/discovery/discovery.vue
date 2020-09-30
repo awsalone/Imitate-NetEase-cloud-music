@@ -117,6 +117,7 @@ import { Swipe, SwipeItem } from 'vant'
 import BScroll from 'better-scroll'
 import { mapState } from 'vuex'
 export default {
+  name: 'discovery',
   data () {
     return {
       loops: [],
@@ -397,6 +398,7 @@ export default {
             height: 50px;
             border-radius: 5px;
             overflow: hidden;
+            flex-shrink: 0;
             img {
               width: 100%;
               height: 100%;
@@ -406,6 +408,12 @@ export default {
           .playMusicInfo {
             display: flex;
             align-items: center;
+            span:nth-child(1) {
+              text-overflow: ellipsis;
+              -webkit-box-orient: vertical;
+              -webkit-line-clamp: 2;
+              overflow: hidden;
+            }
             span:nth-child(2) {
               margin-left: 10px;
               color: #ccc;

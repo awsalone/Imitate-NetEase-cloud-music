@@ -1,7 +1,7 @@
 <template>
   <div id="app" v-cloak>
     <!-- 右侧弹出菜单栏-->
-    <transition name="mask">
+    <transition name="mask" mode="out-in">
       <div
         v-show="lMenuSta"
         class="leftMenuContain"
@@ -9,7 +9,7 @@
         @click.self="toggleMenu"
         v-cloak
       >
-        <transition name="slideFade">
+        <transition name="slideFade" mode="out-in">
           <div class="leftMenu" v-show="lMenuSta">
             <div class="profile">
               <div v-if="userInfo" class="profileInfo">
@@ -66,8 +66,8 @@
           <i class="iconfont icon-icon- search" @click="$router.push('/search')"></i>
         </template>
       </HeaderTop>
-      <keep-alive>
-        <router-view :class="pseduExist?'pseudoContain':''" :key="this.$route.params.id"></router-view>
+      <keep-alive :max="10" include="discovery,mine">
+        <router-view :class="pseduExist?'pseudoContain':''" :key="$route.fullPath"></router-view>
       </keep-alive>
       <Player></Player>
     </div>
@@ -124,6 +124,7 @@ export default {
     login () {
       this.toggleMenu()
       window.localStorage.removeItem('tourist')
+      this.$store.commit('delete_playList')
       this.$router.push('/login')
     },
     logout () {
@@ -133,6 +134,7 @@ export default {
       window.localStorage.removeItem('uid')
       window.localStorage.removeItem('token')
       window.localStorage.removeItem('tourist')
+      this.$store.commit('delete_playList')
       this.$router.push('/login')
     },
     async getUserProfile () {
@@ -168,12 +170,9 @@ export default {
   width: 0 !important;
   height: 0;
 }
-// .mask-enter,
-// .mask-leave-to {
-//   opacity: 0;
-// }
+
 // .mask-leave-active {
-//   transition-delay: 0.3s;
+//   transition: all ease 0.3s;
 // }
 @keyframes fade {
   0% {

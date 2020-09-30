@@ -95,7 +95,6 @@
 
 <script>
 import { mapState } from 'vuex'
-import { Popup } from 'vant'
 
 export default {
   data () {
@@ -110,9 +109,7 @@ export default {
       id: ''
     }
   },
-  components: {
-    [Popup.name]: Popup
-  },
+
   filters: {
     songTime:
       function (value) {

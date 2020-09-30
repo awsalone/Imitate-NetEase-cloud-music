@@ -97,7 +97,7 @@ const routes = [
         path: 'songSheetView/:id',
         component: songSheetView
       }, {
-        path: 'songSheetView',
+        path: '/',
         redirect: 'songSheetView/华语',
         component: songSheetView
       }
@@ -126,7 +126,7 @@ const routes = [
   // 歌曲评论页
   {
     name: 'sComment',
-    path: '/songComment:id',
+    path: '/songComment/:id',
     component: songComment,
     meta: {
       playerHide: true

@@ -46,3 +46,5 @@ export const toggleFav = ({ id, like = true }) => ajax(`/like`, { params: { id, 
 export const favSongList = ({ uid, timestamp }) => ajax(`/likelist`, { params: { uid, timestamp } })
 // 获取用户歌单
 export const getUserSonglist = ({ uid, timestamp }) => ajax(`/user/playlist`, { params: { uid, timestamp } })
+// 登陆状态
+export const getLoginStatus = () => ajax(`/login/status`)

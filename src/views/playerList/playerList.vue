@@ -114,7 +114,7 @@ export default {
       this.$store.dispatch('getSongDetail', { ids: id })
     },
     commentPage () {
-      this.$router.push(`/songComment${this.$route.params.id}`)
+      this.$router.push({ path: `/songComment/${this.$route.params.id}` })
     },
     judgeLoved (id) {
       if (this.likeListIds) {
@@ -134,8 +134,6 @@ export default {
   watch: {
     // 获取歌曲歌手名
     songDetail: function () {
-      console.log(this.songDetail)
-      console.log(this.songDetail.length)
       if (Object.keys(this.songDetail).length) {
         this.songAuthor = this.songDetail.ar[0].name
         this.songPic = `url(${this.songDetail.al.picUrl})`

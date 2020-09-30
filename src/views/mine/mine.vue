@@ -11,10 +11,10 @@
         <button class="loginClick" @click="login">点击登录</button>
       </div>
     </div>
-    <div class="content">
+    <div class="content" v-if="userInfo">
       <card moreInfo class="contItem">
-        <cardItems @click.native.stop="routerPush(favSonglist.id)">
-          <div class="songlistItem">
+        <cardItems>
+          <div class="songlistItem" @click="routerPush(favSonglist.id)">
             <div class="pic">
               <img :src="favSonglist.coverImgUrl" />
             </div>
@@ -30,9 +30,9 @@
           moreInfo
           v-for="(item,index) in createSonglist"
           :key="index"
-          @click.native.stop="routerPush(item.id)"
+          @moreInfoClick="moreInfoEv($event,item)"
         >
-          <div class="songlistItem">
+          <div class="songlistItem" @click="routerPush(item.id)">
             <div class="pic">
               <img :src="item.coverImgUrl" />
             </div>
@@ -48,9 +48,9 @@
           moreInfo
           v-for="(item,index) in collectSonglist"
           :key="index"
-          @click.native.stop="routerPush(item.id)"
+          @moreInfoClick="moreInfoEv($event,item)"
         >
-          <div class="songlistItem">
+          <div class="songlistItem" @click="routerPush(item.id)">
             <div class="pic">
               <img :src="item.coverImgUrl" />
             </div>
@@ -62,14 +62,19 @@
         </cardItems>
       </card>
     </div>
+    <van-popup class="popup" v-model="show" position="bottom" round style="height:30%">
+      <div class="popupTitle">歌单: &nbsp;&nbsp;{{this.curSonglist.name}}</div>
+      <div></div>
+    </van-popup>
   </div>
 </template>
 <script>
 import { mapState } from 'vuex'
-import { getUserSonglist } from '../../api/index'
+import { getUserSonglist, getLoginStatus } from '../../api/index'
 import card from '../../components/card/card'
 import cardItems from '../../components/card/cardItem'
 export default {
+  name: 'mine',
   components: {
     card,
     cardItems
@@ -78,7 +83,10 @@ export default {
     return {
       favSonglist: '',
       createSonglist: '',
-      collectSonglist: ''
+      collectSonglist: '',
+      show: false,
+      status: '',
+      curSonglist: {}
     }
   },
   computed: {
@@ -91,26 +99,45 @@ export default {
     },
     routerPush (id) {
       this.$router.push(`/songSheet/${id}`)
+    },
+    moreInfoEv (childParam, parentParam) {
+      this.show = true
+      const obj = { name: parentParam.name, id: parentParam.id }
+      this.curSonglist = obj
+    },
+    async renderMine () {
+      const id = this.uid || window.localStorage.getItem('uid')
+      if (id) {
+        const time = JSON.parse(JSON.stringify(new Date()))
+        const res = await getUserSonglist({ uid: id, timestamp: time })
+        const songlist = res.playlist
+        this.favSonglist = res.playlist[0]
+        let borderIndex
+        if (songlist.length > 1) {
+          borderIndex = songlist.length
+          for (let i = 1; i < songlist.length; i++) {
+            if (songlist[i].userId !== id - 0) {
+              borderIndex = i
+              break
+            }
+          }
+          this.createSonglist = songlist.slice(1, borderIndex)
+          this.collectSonglist = songlist.slice(borderIndex)
+        }
+      }
     }
 
   },
   async created () {
-    const id = this.uid || window.localStorage.getItem('uid')
-    const time = JSON.parse(JSON.stringify(new Date()))
-    const res = await getUserSonglist({ uid: id, timestamp: time })
-    const songlist = res.playlist
-    this.favSonglist = res.playlist[0]
-    let borderIndex
-    if (songlist.length > 1) {
-      borderIndex = songlist.length
-      for (let i = 1; i < songlist.length; i++) {
-        if (songlist[i].userId !== id - 0) {
-          borderIndex = i
-          break
-        }
-      }
-      this.createSonglist = songlist.slice(1, borderIndex)
-      this.collectSonglist = songlist.slice(borderIndex)
+    const res = await getLoginStatus()
+    this.status = res.code === 200
+    if (this.status) {
+      this.renderMine()
+    }
+  },
+  watch: {
+    status: function () {
+      this.renderMine()
     }
   }
 }
@@ -177,6 +204,11 @@ export default {
   .content {
     .contItem {
       margin: 15px 10px;
+    }
+  }
+  .popup {
+    .popupTitle {
+      padding: 10px;
     }
   }
 }

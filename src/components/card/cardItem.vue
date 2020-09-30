@@ -1,9 +1,9 @@
 <template>
   <div class="cardItem">
-    <div>
+    <div class="left">
       <slot></slot>
     </div>
-    <div>
+    <div @click="moreInfoClick">
       <i v-if="moreInfo" class="iconfont icon-gengduo"></i>
     </div>
   </div>
@@ -14,6 +14,11 @@ export default {
     moreInfo: {
       type: Boolean,
       default: false
+    }
+  },
+  methods: {
+    moreInfoClick () {
+      this.$emit('moreInfoClick', true)
     }
   }
 }
@@ -26,5 +31,8 @@ export default {
   align-items: center;
   padding: 10px 0;
   font-size: 20px;
+  .left {
+    flex-grow: 1;
+  }
 }
 </style>
