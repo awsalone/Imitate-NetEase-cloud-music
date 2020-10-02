@@ -64,6 +64,7 @@
         </span>
       </div>
       <div class="playerHeadR">+&nbsp;收藏({{songSheetList.playlist.subscribedCount}})</div>
+      <div></div>
     </div>
     <!-- 歌曲部分 -->
     <div class="songList" :class="{active:scrollState}">
@@ -90,6 +91,7 @@
   </div>
 </template>
 <script>
+import { mapState } from 'vuex'
 import { reqSongSheetDetail, reqSongDetail } from '../../api/index'
 import HeaderTop from '../../components/headerTop/headerTop'
 export default {
@@ -128,7 +130,8 @@ export default {
         list.push(item.id)
       })
       return list.join(',')
-    }
+    },
+    ...mapState([''])
   },
   created () {
     this.getSongSheetDetail()

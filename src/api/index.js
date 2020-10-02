@@ -48,3 +48,7 @@ export const favSongList = ({ uid, timestamp }) => ajax(`/likelist`, { params: {
 export const getUserSonglist = ({ uid, timestamp }) => ajax(`/user/playlist`, { params: { uid, timestamp } })
 // 登陆状态
 export const getLoginStatus = () => ajax(`/login/status`)
+// 删除歌单
+export const deleteSonglists = (id) => ajax(`/playlist/delete`, { params: id })
+// 收藏|取消收藏歌单
+export const collectSonglist = ({ t, id }) => ajax(`/playlist/subscribe`, { params: { t, id } })

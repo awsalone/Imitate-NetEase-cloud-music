@@ -1,7 +1,7 @@
 <template>
   <div class="mineContain">
     <div class="profile">
-      <div v-if="userInfo" class="profileInfo">
+      <div v-if="songlist" class="profileInfo">
         <div>
           <img :src="userInfo.avatarUrl" />
         </div>
@@ -14,7 +14,7 @@
     <div class="content" v-if="userInfo">
       <card moreInfo class="contItem">
         <cardItems>
-          <div class="songlistItem" @click="routerPush(favSonglist.id)">
+          <div class="songlistItem" @click="routerPush(favSonglist.id)" v-if="favSonglist">
             <div class="pic">
               <img :src="favSonglist.coverImgUrl" />
             </div>
@@ -64,13 +64,13 @@
     </div>
     <van-popup class="popup" v-model="show" position="bottom" round style="height:30%">
       <div class="popupTitle">歌单: &nbsp;&nbsp;{{this.curSonglist.name}}</div>
-      <div></div>
+      <div class="popupItem" @click="deleteSonglist">删除歌单</div>
     </van-popup>
   </div>
 </template>
 <script>
 import { mapState } from 'vuex'
-import { getUserSonglist, getLoginStatus } from '../../api/index'
+import { getUserSonglist, getLoginStatus, deleteSonglists } from '../../api/index'
 import card from '../../components/card/card'
 import cardItems from '../../components/card/cardItem'
 export default {
@@ -81,16 +81,30 @@ export default {
   },
   data () {
     return {
-      favSonglist: '',
-      createSonglist: '',
-      collectSonglist: '',
       show: false,
-      status: '',
-      curSonglist: {}
+      status: '', // 登陆状态
+      curSonglist: {},
+      borderIndex: '',
+      songlist: ''
     }
   },
   computed: {
-    ...mapState(['userInfo', 'uid'])
+    ...mapState(['userInfo', 'uid']),
+    favSonglist () {
+      return this.songlist[0]
+    },
+    createSonglist () {
+      return this.songlist.slice(1, this.borderIndex)
+    },
+    collectSonglist () {
+      let res = ''
+      if (this.songlist.length > 1) {
+        res = this.songlist.slice(this.borderIndex)
+      }
+
+      return res
+    }
+
   },
   methods: {
     login () {
@@ -105,13 +119,22 @@ export default {
       const obj = { name: parentParam.name, id: parentParam.id }
       this.curSonglist = obj
     },
+    async deleteSonglist () {
+      const id = { id: this.curSonglist.id }
+      const uid = this.uid || window.localStorage.getItem('uid')
+      deleteSonglists(id)
+      this.show = false
+      const time = JSON.parse(JSON.stringify(new Date()))
+      const res = await getUserSonglist({ uid: uid, timestamp: time })
+      this.songlist = res.playlist
+    },
     async renderMine () {
       const id = this.uid || window.localStorage.getItem('uid')
       if (id) {
         const time = JSON.parse(JSON.stringify(new Date()))
         const res = await getUserSonglist({ uid: id, timestamp: time })
         const songlist = res.playlist
-        this.favSonglist = res.playlist[0]
+        this.songlist = songlist
         let borderIndex
         if (songlist.length > 1) {
           borderIndex = songlist.length
@@ -121,8 +144,7 @@ export default {
               break
             }
           }
-          this.createSonglist = songlist.slice(1, borderIndex)
-          this.collectSonglist = songlist.slice(borderIndex)
+          this.borderIndex = borderIndex
         }
       }
     }
@@ -209,6 +231,13 @@ export default {
   .popup {
     .popupTitle {
       padding: 10px;
+      border-bottom: 1px solid #ccc;
+    }
+    .popupItem {
+      text-align: center;
+      padding: 10px;
+      letter-spacing: 2px;
+      font-size: 18px;
     }
   }
 }

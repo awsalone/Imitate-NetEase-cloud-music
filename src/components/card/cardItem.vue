@@ -18,7 +18,7 @@ export default {
   },
   methods: {
     moreInfoClick () {
-      this.$emit('moreInfoClick', true)
+      this.$emit('moreInfoClick')
     }
   }
 }

@@ -29,6 +29,7 @@
       <!-- 歌词 -->
       <div class="lyricContain" v-else @click.stop="middleShow = !middleShow">未获取到歌词</div>
     </div>
+    <!--底部菜单-->
     <div>
       <ul class="bottomMenu">
         <li @click="commentPage()">
