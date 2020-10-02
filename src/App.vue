@@ -44,7 +44,7 @@ import LeftMenu from './components/titleMenu'
 import HeaderTop from './components/headerTop/headerTop'
 import Player from './components/player/player'
 import { mapState } from 'vuex'
-import { favSongList, getLoginStatus } from './api/index'
+import { favSongList, getLoginStatus, getUserSonglist } from './api/index'
 
 export default {
   data () {
@@ -75,6 +75,7 @@ export default {
     this.status = res.code === 200
     if (this.status) {
       this.getfavSongList()
+      this.getSongList()
     }
   },
   mounted () {
@@ -95,6 +96,14 @@ export default {
         return false
       }
     },
+    // 获取用户歌单
+    async getSongList () {
+      const id = this.uid || window.localStorage.getItem('uid')
+      const time = JSON.parse(JSON.stringify(new Date()))
+      const res = await getUserSonglist({ uid: id, timestamp: time })
+      const songlist = res.playlist
+      this.$store.commit('get_collectsheetList', songlist)
+    },
     toggleLMenu () {
       this.lMenuSta = !this.lMenuSta
       this.$store.commit('toggle_menu')
@@ -102,7 +111,8 @@ export default {
   },
   watch: {
     status: function () {
-      // this.getUserProfile()
+      this.getfavSongList()
+      this.getSongList()
     }
   }
 }

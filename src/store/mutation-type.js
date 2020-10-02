@@ -12,3 +12,4 @@ export const RECEIVE_UID = 'receive_uid' // 获取用户id
 export const TOGGLE_MENU = 'toggle_menu' // 切换菜单显示
 export const GET_USERINFO = 'get_userinfo' // 用户信息
 export const GET_LIKELIST = 'get_likelist' // 喜欢音乐列表
+export const GET_COLLECTSHEETLIST = 'get_collectsheetList' // 获取用户歌单

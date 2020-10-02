@@ -63,8 +63,12 @@
           <span>（共{{songSheetList.playlist.trackCount}}首）</span>
         </span>
       </div>
-      <div class="playerHeadR">+&nbsp;收藏({{songSheetList.playlist.subscribedCount}})</div>
-      <div></div>
+      <div
+        class="playerHeadR"
+        v-if="!status"
+        @click="collet"
+      >+&nbsp;收藏({{songSheetList.playlist.subscribedCount}})</div>
+      <div v-else class="playerHeadr" @click="collet">已收藏</div>
     </div>
     <!-- 歌曲部分 -->
     <div class="songList" :class="{active:scrollState}">
@@ -92,7 +96,7 @@
 </template>
 <script>
 import { mapState } from 'vuex'
-import { reqSongSheetDetail, reqSongDetail } from '../../api/index'
+import { reqSongSheetDetail, reqSongDetail, getcollectSonglist, getUserSonglist } from '../../api/index'
 import HeaderTop from '../../components/headerTop/headerTop'
 export default {
   data () {
@@ -101,7 +105,8 @@ export default {
       songListUrl: [],
       songDetail: [],
       scrollState: '',
-      scrollHeight: '200'
+      scrollHeight: '200',
+      status: '' // true 已收藏，false 为收藏
     }
   },
   components: {
@@ -121,6 +126,23 @@ export default {
     changeSong (id) {
       this.$store.dispatch('getSongDetail', { ids: id })
       this.$store.commit('receive_playState', { zt: false })
+    },
+    // 收藏|取消歌单
+    collet () {
+      const t = this.status ? 2 : 1
+      this.status = !this.status
+      const data = { t: t, id: this.$route.params.id }
+      getcollectSonglist(data)
+      this.getSongList()
+    },
+    async getSongList () {
+      console.log(123)
+      const id = this.uid || window.localStorage.getItem('uid')
+      const time = JSON.parse(JSON.stringify(new Date()))
+      const res = await getUserSonglist({ uid: id, timestamp: time })
+      const songlist = res.playlist
+      console.log(songlist)
+      this.$store.commit('get_collectsheetList', songlist)
     }
   },
   computed: {
@@ -131,10 +153,17 @@ export default {
       })
       return list.join(',')
     },
-    ...mapState([''])
+    ...mapState(['collectsheetList', 'likeListIds'])
   },
   created () {
     this.getSongSheetDetail()
+    const arr = this.collectsheetList
+    const id = this.$route.params.id
+
+    const status = arr.some(function (cur) {
+      return cur.id === id - 0
+    })
+    this.status = status
   },
   mounted () {
     // fixed
@@ -159,6 +188,15 @@ export default {
   watch: {
     songSheetList () {
       this.getSongDetail()
+    },
+    collectsheetList () {
+      const arr = this.collectsheetList
+      const id = this.$route.params.id
+      console.log(arr, 1)
+      const status = arr.some(function (cur) {
+        return cur.id === id - 0
+      })
+      this.status = status
     }
   }
 }
@@ -263,6 +301,19 @@ export default {
       box-sizing: border-box;
       vertical-align: center;
       color: white;
+      letter-spacing: 1px;
+      font-size: 12px;
+    }
+    .playerHeadr {
+      border-radius: 20px;
+      margin: 8px;
+      height: 40px;
+      background-color: rgb(163, 163, 163);
+      line-height: 30px;
+      padding: 5px;
+      box-sizing: border-box;
+      vertical-align: center;
+      color: #fff;
       letter-spacing: 1px;
       font-size: 12px;
     }
