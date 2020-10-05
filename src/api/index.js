@@ -52,3 +52,5 @@ export const getLoginStatus = () => ajax(`/login/status`)
 export const deleteSonglists = (id) => ajax(`/playlist/delete`, { params: id })
 // 收藏|取消收藏歌单
 export const getcollectSonglist = ({ t, id }) => ajax(`/playlist/subscribe`, { params: { t, id } })
+// 新建歌单
+export const newSonglist = (name) => ajax(`/playlist/create`, { params: name })

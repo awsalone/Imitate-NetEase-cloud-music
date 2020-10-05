@@ -1,5 +1,6 @@
 <template>
   <div class="mineContain">
+    <!--用户信息-->
     <div class="profile">
       <div v-if="songlist" class="profileInfo">
         <div>
@@ -11,6 +12,7 @@
         <button class="loginClick" @click="login">点击登录</button>
       </div>
     </div>
+    <!--歌单内容-->
     <div class="content" v-if="userInfo">
       <card moreInfo class="contItem">
         <cardItems>
@@ -25,10 +27,10 @@
           </div>
         </cardItems>
       </card>
-      <card moreInfo titleShow class="contItem" titlename="创建歌单">
+      <card moreInfo titleShow class="contItem" titlename="创建歌单" @titleclick="clickTitle">
         <cardItems
           moreInfo
-          v-for="(item,index) in createSonglist"
+          v-for="(item,index) in createSonglists"
           :key="index"
           @moreInfoClick="moreInfoEv($event,item)"
         >
@@ -43,7 +45,7 @@
           </div>
         </cardItems>
       </card>
-      <card moreInfo titleShow class="contItem" titlename="收藏歌单">
+      <card moreInfo titleShow class="contItem" titlename="收藏歌单" @titleclick="clickTitle">
         <cardItems
           moreInfo
           v-for="(item,index) in collectSonglist"
@@ -62,22 +64,31 @@
         </cardItems>
       </card>
     </div>
+    <!--标题弹出层-->
+    <van-popup class="popup" v-model="titleshow" position="bottom" round style="height:30%">
+      <div class="popupTitle">我创建的歌单（{{this.createSonglists.length}}）</div>
+      <div class="popupItem" @click="createSonglist">创建歌单</div>
+    </van-popup>
+    <!-- 子选项弹出层 -->
     <van-popup class="popup" v-model="show" position="bottom" round style="height:30%">
       <div class="popupTitle">歌单: &nbsp;&nbsp;{{this.curSonglist.name}}</div>
       <div class="popupItem" @click="deleteSonglist">删除歌单</div>
     </van-popup>
+    <promptBox v-model="promptShow" @close-click="close_click" @submit="submit_name"></promptBox>
   </div>
 </template>
 <script>
 import { mapState } from 'vuex'
-import { getUserSonglist, getLoginStatus, deleteSonglists } from '../../api/index'
+import { newSonglist, getUserSonglist, getLoginStatus, deleteSonglists } from '../../api/index'
 import card from '../../components/card/card'
 import cardItems from '../../components/card/cardItem'
+import promptBox from '../../components/promptBox'
 export default {
   name: 'mine',
   components: {
     card,
-    cardItems
+    cardItems,
+    promptBox
   },
   data () {
     return {
@@ -85,7 +96,9 @@ export default {
       status: '', // 登陆状态
       curSonglist: {},
       borderIndex: '',
-      songlist: ''
+      songlist: '',
+      titleshow: false,
+      promptShow: false
     }
   },
   computed: {
@@ -93,7 +106,7 @@ export default {
     favSonglist () {
       return this.songlist[0]
     },
-    createSonglist () {
+    createSonglists () {
       return this.songlist.slice(1, this.borderIndex)
     },
     collectSonglist () {
@@ -114,41 +127,63 @@ export default {
     routerPush (id) {
       this.$router.push(`/songSheet/${id}`)
     },
+    // 子元素更多点击事件
     moreInfoEv (childParam, parentParam) {
       this.show = true
       const obj = { name: parentParam.name, id: parentParam.id }
       this.curSonglist = obj
     },
+    // 删除歌单
     async deleteSonglist () {
       const id = { id: this.curSonglist.id }
-      const uid = this.uid || window.localStorage.getItem('uid')
-      deleteSonglists(id)
+      await deleteSonglists(id)
       this.show = false
-      const time = JSON.parse(JSON.stringify(new Date()))
-      const res = await getUserSonglist({ uid: uid, timestamp: time })
-      this.songlist = res.playlist
+      this.renderMine()
     },
-    async renderMine () {
+    // 创建歌单显示
+    createSonglist () {
+      this.titleshow = false
+      this.promptShow = true
+    },
+    // 标题点击事件
+    clickTitle () {
+      this.titleshow = true
+    },
+    //  歌单名称
+    async submit_name (value) {
+      const data = { name: value }
+      await newSonglist(data)
+      this.promptShow = false
+      this.renderMine()
+    },
+    // 获取歌单
+    renderMine () {
       const id = this.uid || window.localStorage.getItem('uid')
       if (id) {
-        const time = JSON.parse(JSON.stringify(new Date()))
-        const res = await getUserSonglist({ uid: id, timestamp: time })
-        const songlist = res.playlist
-        this.songlist = songlist
-        let borderIndex
-        if (songlist.length > 1) {
-          borderIndex = songlist.length
-          for (let i = 1; i < songlist.length; i++) {
-            if (songlist[i].userId !== id - 0) {
-              borderIndex = i
-              break
-            }
+        this.get_playlist()
+      }
+    },
+    close_click () {
+      this.promptShow = false
+    },
+    async get_playlist () {
+      const id = this.uid || window.localStorage.getItem('uid')
+      const time = JSON.parse(JSON.stringify(new Date()))
+      const res = await getUserSonglist({ uid: id, timestamp: time })
+      const songlist = res.playlist
+      this.songlist = songlist
+      let borderIndex
+      if (songlist.length > 1) {
+        borderIndex = songlist.length
+        for (let i = 1; i < songlist.length; i++) {
+          if (songlist[i].userId !== id - 0) {
+            borderIndex = i
+            break
           }
-          this.borderIndex = borderIndex
         }
+        this.borderIndex = borderIndex
       }
     }
-
   },
   async created () {
     const res = await getLoginStatus()

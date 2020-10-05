@@ -1,6 +1,6 @@
 <template>
   <div class="cardContain">
-    <div class="cardTitle" v-if="titleShow">
+    <div class="cardTitle" v-if="titleShow" @click="titleclick">
       <div>{{this.titlename}}</div>
       <div>
         <span v-if="close">
@@ -32,6 +32,11 @@ export default {
     titleShow: {
       default: false,
       type: Boolean
+    }
+  },
+  methods: {
+    titleclick () {
+      this.$emit('titleclick')
     }
   }
 }
