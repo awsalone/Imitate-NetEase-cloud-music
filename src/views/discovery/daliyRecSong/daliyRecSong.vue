@@ -11,7 +11,7 @@
       </template>
     </HeaderTop>
     <!--头部-->
-    <div class="title" ref="scrollBorder">
+    <div class="titles" ref="scrollBorder">
       <div class="top">
         <p>每日推荐</p>
         <p>（此处应有背景）</p>
@@ -108,7 +108,7 @@ export default {
     }
   }
   // 头部
-  .title {
+  .titles {
     margin-top: 70px;
     height: 100px;
     width: 100%;

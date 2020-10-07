@@ -79,7 +79,7 @@
 </template>
 <script>
 import { mapState } from 'vuex'
-import { newSonglist, getUserSonglist, getLoginStatus, deleteSonglists } from '../../api/index'
+import { newSonglist, getUserSonglist, deleteSonglists } from '../../api/index'
 import card from '../../components/card/card'
 import cardItems from '../../components/card/cardItem'
 import promptBox from '../../components/promptBox'
@@ -186,8 +186,9 @@ export default {
     }
   },
   async created () {
-    const res = await getLoginStatus()
-    this.status = res.code === 200
+    const token = window.localStorage.getItem('token')
+
+    this.status = !!token
     if (this.status) {
       this.renderMine()
     }

@@ -54,7 +54,7 @@
     </div>
     <!-- 脱离定位部分 -->
     <div class="playerHead" :class="{active:scrollState}">
-      <div class="playerHeadL">
+      <div class="playerHeadL" @click="playAll(songDetail,songDetail[0].id)">
         <span class="playerIcon">
           <i class="iconfont icon-bofang_bg"></i>
         </span>
@@ -63,9 +63,10 @@
           <span>（共{{songSheetList.playlist.trackCount}}首）</span>
         </span>
       </div>
+      <div v-if="this.fav" style="display:none"></div>
       <div
         class="playerHeadR"
-        v-if="!status"
+        v-else-if="!status"
         @click="collet"
       >+&nbsp;收藏({{songSheetList.playlist.subscribedCount}})</div>
       <div v-else class="playerHeadr" @click="collet">已收藏</div>
@@ -106,7 +107,9 @@ export default {
       songDetail: [],
       scrollState: '',
       scrollHeight: '200',
-      status: '' // true 已收藏，false 为收藏
+      status: false, // true 已收藏，false 为收藏
+      loginStatus: '',
+      fav: false
     }
   },
   components: {
@@ -127,21 +130,34 @@ export default {
       this.$store.dispatch('getSongDetail', { ids: id })
       this.$store.commit('receive_playState', { zt: false })
     },
+    // 播放全部
+    playAll (list, id) {
+      if (this.songDetail.length) {
+        this.$store.commit('play_all', { playList: list })
+        this.changeSong(id)
+      }
+    },
     // 收藏|取消歌单
-    collet () {
-      const t = this.status ? 2 : 1
-      this.status = !this.status
-      const data = { t: t, id: this.$route.params.id }
-      getcollectSonglist(data)
-      this.getSongList()
+    async collet () {
+      const token = window.localStorage.getItem('token')
+      this.loginStatus = !!token
+      if (this.loginStatus) {
+        const t = this.status ? 2 : 1
+        this.status = !this.status
+        const data = { t: t, id: this.$route.params.id }
+        getcollectSonglist(data)
+        this.getSongList()
+      } else {
+        window.localStorage.removeItem('tourist')
+        this.$store.commit('delete_playList')
+        this.$router.push('/login')
+      }
     },
     async getSongList () {
-      console.log(123)
       const id = this.uid || window.localStorage.getItem('uid')
       const time = JSON.parse(JSON.stringify(new Date()))
       const res = await getUserSonglist({ uid: id, timestamp: time })
       const songlist = res.playlist
-      console.log(songlist)
       this.$store.commit('get_collectsheetList', songlist)
     }
   },
@@ -157,13 +173,17 @@ export default {
   },
   created () {
     this.getSongSheetDetail()
-    const arr = this.collectsheetList
-    const id = this.$route.params.id
-
-    const status = arr.some(function (cur) {
-      return cur.id === id - 0
-    })
-    this.status = status
+    const token = window.localStorage.getItem('token')
+    if (token) {
+      const arr = this.collectsheetList
+      const id = this.$route.params.id
+      const status = arr.some(function (cur) {
+        return cur.id === id - 0
+      })
+      this.status = status
+      const fav = this.collectsheetList[0].id === this.$route.params.id - 0
+      this.fav = fav
+    }
   },
   mounted () {
     // fixed
@@ -190,13 +210,16 @@ export default {
       this.getSongDetail()
     },
     collectsheetList () {
-      const arr = this.collectsheetList
-      const id = this.$route.params.id
-      console.log(arr, 1)
-      const status = arr.some(function (cur) {
-        return cur.id === id - 0
-      })
-      this.status = status
+      if (this.loginStatus) {
+        const arr = this.collectsheetList
+        const id = this.$route.params.id
+        const status = arr.some(function (cur) {
+          return cur.id === id - 0
+        })
+        this.status = status
+      } else {
+        this.status = false
+      }
     }
   }
 }

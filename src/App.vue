@@ -44,13 +44,13 @@ import LeftMenu from './components/titleMenu'
 import HeaderTop from './components/headerTop/headerTop'
 import Player from './components/player/player'
 import { mapState } from 'vuex'
-import { favSongList, getLoginStatus, getUserSonglist } from './api/index'
+import { favSongList, getUserSonglist } from './api/index'
 
 export default {
   data () {
     return {
-      lMenuSta: 'false',
-      status: ''
+      lMenuSta: false,
+      status: false
     }
   },
   components: {
@@ -71,8 +71,9 @@ export default {
   },
   async created () {
     // this.getUserProfile()
-    const res = await getLoginStatus()
-    this.status = res.code === 200
+    // const res = await getLoginStatus()
+    const token = window.localStorage.getItem('token')
+    this.status = !!token
     if (this.status) {
       this.getfavSongList()
       this.getSongList()
@@ -91,7 +92,6 @@ export default {
       if (id) {
         const res = await favSongList(uid)
         this.$store.commit('get_likelist', res.ids)
-        console.log('根组件返回的喜欢列表', res)
       } else {
         return false
       }
