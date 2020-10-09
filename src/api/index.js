@@ -42,7 +42,6 @@ export const userLogout = () => ajax(`/logout`)
 export const getSongComment = ({ id, before = 0 }) => ajax(`/comment/music`, { params: { id, before } })
 // 获取歌单评论
 export const getSongSheetComment = ({ id, before = 0 }) => ajax(`/comment/playlist`, { params: { id, before } })
-
 // 音乐的喜欢与取消
 export const toggleFav = ({ id, like = true }) => ajax(`/like`, { params: { id, like } })
 // 喜欢音乐列表

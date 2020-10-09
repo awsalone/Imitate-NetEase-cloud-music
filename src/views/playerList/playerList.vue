@@ -115,6 +115,8 @@ export default {
       this.$store.dispatch('getSongDetail', { ids: id })
     },
     commentPage () {
+      this.$store.commit('toggle_songorlist', 1)
+
       this.$router.push({ path: `/songComment/${this.$route.params.id}` })
     },
     judgeLoved (id) {

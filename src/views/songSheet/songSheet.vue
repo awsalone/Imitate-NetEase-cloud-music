@@ -34,7 +34,7 @@
         </div>
       </div>
       <div class="bottom">
-        <span class="vertical">
+        <span class="vertical" @click="commentPage()">
           <i class="iconfont icon-pinglun"></i>
           <span class="verticalText">{{songSheetList.playlist.commentCount}}</span>
         </span>
@@ -54,7 +54,7 @@
     </div>
     <!-- 脱离定位部分 -->
     <div class="playerHead" :class="{active:scrollState}">
-      <div class="playerHeadL" @click="playAll(songDetail,songDetail[0].id)">
+      <div class="playerHeadL" @click="playAll()">
         <span class="playerIcon">
           <i class="iconfont icon-bofang_bg"></i>
         </span>
@@ -104,7 +104,7 @@ export default {
     return {
       songSheetList: '',
       songListUrl: [],
-      songDetail: [],
+      songDetail: '',
       scrollState: '',
       scrollHeight: '200',
       status: false, // true 已收藏，false 为收藏
@@ -116,25 +116,25 @@ export default {
     HeaderTop
   },
   methods: {
-    // 歌单
-    async getSongSheetDetail () {
-      const result = await reqSongSheetDetail(this.$route.params.id)
-      this.songSheetList = result
-    },
     // 歌曲详情
     async getSongDetail () {
       const result = await reqSongDetail({ ids: this.songSheetListId })
       this.songDetail = result.songs
+    },
+    // 跳转评论
+    commentPage () {
+      this.$store.commit('toggle_songorlist', 1)
+      this.$router.push({ path: `/songComment/${this.$route.params.id}` })
     },
     changeSong (id) {
       this.$store.dispatch('getSongDetail', { ids: id })
       this.$store.commit('receive_playState', { zt: false })
     },
     // 播放全部
-    playAll (list, id) {
-      if (this.songDetail.length) {
-        this.$store.commit('play_all', { playList: list })
-        this.changeSong(id)
+    playAll () {
+      if (this.songDetail && this.songDetail.length) {
+        this.$store.commit('play_all', { playList: this.songDetail })
+        this.changeSong(this.songDetail[0].id)
       }
     },
     // 收藏|取消歌单
@@ -171,9 +171,11 @@ export default {
     },
     ...mapState(['collectsheetList', 'likeListIds'])
   },
-  created () {
-    this.getSongSheetDetail()
+  async created () {
+    const result = await reqSongSheetDetail(this.$route.params.id)
+    this.songSheetList = result
     const token = window.localStorage.getItem('token')
+    const uid = window.localStorage.getItem('uid') || this.uid
     if (token) {
       const arr = this.collectsheetList
       const id = this.$route.params.id
@@ -181,7 +183,8 @@ export default {
         return cur.id === id - 0
       })
       this.status = status
-      const fav = this.collectsheetList[0].id === this.$route.params.id - 0
+      // 喜欢歌单和自创歌单
+      const fav = this.collectsheetList[0].id === this.$route.params.id - 0 || this.songSheetList.playlist.userId === uid - 0
       this.fav = fav
     }
   },
@@ -196,8 +199,9 @@ export default {
       }
     })
   },
-  beforeRouteUpdate (to, from, next) {
-    this.getSongSheetDetail()
+  async beforeRouteUpdate (to, from, next) {
+    const result = await reqSongSheetDetail(this.$route.params.id)
+    this.songSheetList = result
     next()
   },
   updated () {

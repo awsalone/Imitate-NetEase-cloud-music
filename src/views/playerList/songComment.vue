@@ -1,5 +1,5 @@
 <template>
-  <div class="sComment">
+  <div class="sComment" v-if="this.comment">
     <HeaderTop>
       <template #left>
         <div>
@@ -34,7 +34,8 @@
 </template>
 
 <script>
-import { getSongComment } from '../../api/index'
+import { getSongComment, getSongSheetComment } from '../../api/index'
+import { mapState } from 'vuex'
 import HeaderTop from '../../components/headerTop/headerTop'
 export default {
   components: {
@@ -42,10 +43,16 @@ export default {
   },
   async created () {
     const a = { id: this.$route.params.id }
-    const res = await getSongComment(a)
-    console.log(res)
+    let res = null
+    if (this.songOrsonglist) {
+      res = await getSongSheetComment(a)
+    } else {
+      res = await getSongComment(a)
+    }
     this.comment = res
-    this.beforeData = this.comment.comments[this.comment.comments.length - 1].time
+    if (res.comments.length) {
+      this.beforeData = this.comment.comments[this.comment.comments.length - 1].time
+    }
   },
   mounted () {
     window.addEventListener('scroll', this.scrollTest)
@@ -55,7 +62,7 @@ export default {
   },
   data () {
     return {
-      comment: {},
+      comment: null,
       beforeData: ''
     }
   },
@@ -76,11 +83,19 @@ export default {
       const scrollHeight = document.body.scrollHeight || document.documentElement.scrollHeight
       if (scrollTop + clientHeight >= scrollHeight + 70) {
         const data = { id: this.$route.params.id, before: this.beforeData }
-        const res = await getSongComment(data)
+        let res = null
+        if (this.songOrsonglist) {
+          res = await getSongSheetComment(data)
+        } else {
+          res = await getSongComment(data)
+        }
         this.comment.comments = [...this.comment.comments, ...res.comments]
       }
     }
 
+  },
+  computed: {
+    ...mapState(['songOrsonglist', 'playModeNum', 'playStateC'])
   }
 }
 </script>

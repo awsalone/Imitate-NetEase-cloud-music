@@ -12,5 +12,6 @@ export default {
   lMenu: false, // 左侧菜单栏显示状态
   userInfo: '', // 用户信息
   likeListIds: false, // 喜欢音乐列表
-  collectsheetList: ''
+  collectsheetList: '', // 收藏歌单
+  songOrsonglist: '' // 判断歌曲或歌单请求 0歌曲 1歌单
 }

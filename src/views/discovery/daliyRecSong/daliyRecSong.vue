@@ -18,7 +18,7 @@
       </div>
     </div>
     <!-- 脱离定位部分 -->
-    <div class="playerHead" :class="{active:scrollState}">
+    <div class="playerHead" :class="{active:scrollState}" @click="playAll()">
       <div class="playerHeadL">
         <span class="playerIcon">
           <i class="iconfont icon-bofang_bg"></i>
@@ -71,6 +71,11 @@ export default {
     changeSong (id) {
       this.$store.dispatch('getSongDetail', { ids: id })
       this.$store.commit('receive_playState', { zt: false })
+    },
+    // 播放全部
+    playAll () {
+      this.$store.commit('play_all', { playList: this.songSheetList })
+      this.changeSong(this.songSheetList[0].id)
     }
   },
   async created () {
