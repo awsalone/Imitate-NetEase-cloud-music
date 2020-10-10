@@ -149,7 +149,12 @@ export default {
   },
   methods: {
     daliyRecSongs () {
-      this.$router.push({ path: '/daliyRecSong' })
+      const id = this.uid || window.localStorage.getItem('uid')
+      if (id) {
+        this.$router.push({ path: '/daliyRecSong' })
+      } else {
+        this.$router.push({ path: '/login' })
+      }
     },
     // 获取轮播图数据
     getLoop: async function () {

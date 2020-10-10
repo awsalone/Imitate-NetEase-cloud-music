@@ -176,7 +176,7 @@ export default {
     this.songSheetList = result
     const token = window.localStorage.getItem('token')
     const uid = window.localStorage.getItem('uid') || this.uid
-    if (token) {
+    if (this.collectsheetList) {
       const arr = this.collectsheetList
       const id = this.$route.params.id
       const status = arr.some(function (cur) {
@@ -214,7 +214,7 @@ export default {
       this.getSongDetail()
     },
     collectsheetList () {
-      if (this.loginStatus) {
+      if (this.collectsheetList) {
         const arr = this.collectsheetList
         const id = this.$route.params.id
         const status = arr.some(function (cur) {

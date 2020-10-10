@@ -59,7 +59,7 @@ export default {
     LeftMenu
   },
   computed: {
-    ...mapState(['songDetail', 'lMenu', 'uid', 'userInfo']),
+    ...mapState(['songDetail', 'lMenu', 'uid']),
     pseduExist () {
       const flag = this.$route.name === 'sComment'
       if (Object.keys(this.songDetail).length && !flag) {

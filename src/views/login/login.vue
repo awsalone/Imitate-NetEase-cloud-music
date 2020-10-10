@@ -166,7 +166,6 @@ export default {
             // login
             const res = await login({ phone: this.ruleForm.phoneNum, password: this.ruleForm.password })
             if (res.code === 200) {
-              console.log(res)
               const data = res.cookie
               window.localStorage.setItem('token', res.token)
               const remb = data.search('__remember_me')
@@ -189,7 +188,6 @@ export default {
               window.localStorage.setItem('token', res.token)
               this.touristStatus()
               this.$router.push('/discovery')
-              console.log(res)
             } else {
               this.$refs.ruleForm.validateField('captcha', (valid) => {
                 return false

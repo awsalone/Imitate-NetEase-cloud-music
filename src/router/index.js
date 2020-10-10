@@ -119,7 +119,7 @@ const routes = [
         next()
       } else {
         window.localStorage.removeItem('tourist')
-        next({ path: '/' })
+        next({ path: '/login' })
       }
     }
   },
@@ -157,6 +157,12 @@ router.beforeEach((to, from, next) => {
     next({ name: 'login' })
   } else {
     next()
+  }
+})
+router.afterEach((to, from) => {
+  if (from.path === '/login' && to.path !== '/login') {
+    console.log('刷新')
+    window.location.reload()
   }
 })
 

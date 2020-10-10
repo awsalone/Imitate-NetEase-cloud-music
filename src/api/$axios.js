@@ -1,4 +1,5 @@
 import axios from 'axios'
+import router from '../router/index.js'
 import config from './config.js'
 
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8'

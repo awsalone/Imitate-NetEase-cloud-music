@@ -2,7 +2,7 @@
   <div class="mineContain">
     <!--用户信息-->
     <div class="profile">
-      <div v-if="songlist" class="profileInfo">
+      <div v-if="status" class="profileInfo">
         <div>
           <img :src="userInfo.avatarUrl" />
         </div>
@@ -187,7 +187,6 @@ export default {
   },
   async created () {
     const token = window.localStorage.getItem('token')
-
     this.status = !!token
     if (this.status) {
       this.renderMine()
@@ -204,7 +203,8 @@ export default {
 .mineContain {
   margin-top: 70px;
   background-color: rgb(233, 233, 233);
-  height: 100%;
+  box-sizing: border-box;
+  min-height: 100%;
   .songlistItem {
     display: flex;
     .pic {
