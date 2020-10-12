@@ -8,6 +8,7 @@
         <input
           type="text"
           class="searchInput"
+          ref="searches"
           @blur="refresh()"
           :placeholder="defaultKeyword"
           v-model="keyWord"
@@ -15,7 +16,7 @@
       </template>
       <template #right>
         <router-link
-          to="/content"
+          to="/search/content"
           class="iconfont icon-icon-"
           style="font-size:25px"
           @click.native="search()"
@@ -50,28 +51,28 @@ export default {
       this.hotSearchs = hotSearchs.data
     },
     refresh: async function () {
-      const time = (new Date()).valueOf()
-      const keyWord = await defaultKeyword({ time: time })
+      const time = { timestamps: (new Date()).valueOf() }
+      const keyWord = await defaultKeyword(time)
       this.defaultKeyword = keyWord.data.realkeyword
     },
     search: async function () {
       const item = this.keyWord && this.defaultKeyword !== '请输入搜索项' ? this.keyWord : this.defaultKeyword
       this.keyWord = item
+
       this.$store.commit('receive_keywords', item)
       const result = await searchContent({ keywords: this.keyWord })
-      const res = result.songs
+      const res = result.result.songs
       this.$store.commit('receive_search', res)
     },
     keywordPush: function (data) {
       this.keyWord = data
     },
     backEvent: function () {
-      this.$router.back()
       this.keyWord = ''
+      this.$router.back()
     }
   },
   created () {
-    this.keyWord = ''
     this.init()
     // const arr = [1, 2, 3]
     // const res = arr.filter((item) => {

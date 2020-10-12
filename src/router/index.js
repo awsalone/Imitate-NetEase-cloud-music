@@ -61,16 +61,16 @@ const routes = [
     component: search,
     children: [
       {
-        path: '/default',
+        path: 'default',
         component: searchDefault
       },
       {
-        path: '/content',
+        path: 'content',
         component: searchContent
       },
       {
         path: '/',
-        redirect: '/default'
+        redirect: 'default'
       }
     ]
   },
@@ -161,7 +161,7 @@ router.beforeEach((to, from, next) => {
 })
 router.afterEach((to, from) => {
   if (from.path === '/login' && to.path !== '/login') {
-    console.log('刷新')
+    console.log('路由刷新')
     window.location.reload()
   }
 })

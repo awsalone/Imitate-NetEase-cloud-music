@@ -60,7 +60,7 @@ export default {
       const result = await searchContent({ keywords: keyWord })
       const res = result.result.songs
       this.$store.commit('receive_search', res)
-      this.$router.push('/content')
+      this.$router.push('/search/content')
     },
     clearKeyword: function () {
       this.$store.commit('delete_keywords')

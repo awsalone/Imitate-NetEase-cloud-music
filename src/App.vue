@@ -33,7 +33,7 @@
         </template>
       </HeaderTop>
       <keep-alive :max="10" include="discovery,mine">
-        <router-view :class="pseduExist?'pseudoContain':''" :key="$route.fullPath"></router-view>
+        <router-view :class="pseduExist?'pseudoContain':''"></router-view>
       </keep-alive>
       <Player></Player>
     </div>

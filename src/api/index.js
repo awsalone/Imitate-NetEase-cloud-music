@@ -29,7 +29,7 @@ export const login = ({ phone, password }) => ajax(`/login/cellphone`, { data: {
 // 每日推荐歌曲
 export const recSong = () => ajax('/recommend/songs')
 // 默认搜索关键词
-export const defaultKeyword = ({ time }) => ajax(`/search/default?${time}`)
+export const defaultKeyword = (time) => ajax(`/search/default?`, { params: time })
 // 热搜列表
 export const hotSearch = () => ajax(`/search/hot/detail`)
 // 获取搜索内容
