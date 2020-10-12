@@ -15,7 +15,7 @@ const searchContent = () => import('../views/search/searchContent')
 const daliyRecSongs = () => import('../views/discovery/daliyRecSong/daliyRecSong')
 const songComment = () => import('../views/playerList/songComment')
 Vue.use(VueRouter)
-
+// 路由跳转至当前路由报错问题
 const originalPush = VueRouter.prototype.push
 VueRouter.prototype.push = function push (location, onResolve, onReject) {
   if (onResolve || onReject) return originalPush.call(this, location, onResolve, onReject)
@@ -161,7 +161,6 @@ router.beforeEach((to, from, next) => {
 })
 router.afterEach((to, from) => {
   if (from.path === '/login' && to.path !== '/login') {
-    console.log('路由刷新')
     window.location.reload()
   }
 })
