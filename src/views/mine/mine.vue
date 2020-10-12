@@ -14,6 +14,7 @@
     </div>
     <!--歌单内容-->
     <div class="content" v-if="userInfo">
+      <!-- 喜欢列表 -->
       <card moreInfo class="contItem">
         <cardItems>
           <div class="songlistItem" @click="routerPush(favSonglist.id)" v-if="favSonglist">
@@ -27,6 +28,7 @@
           </div>
         </cardItems>
       </card>
+      <!-- 创建歌单 -->
       <card moreInfo titleShow class="contItem" titlename="创建歌单" @titleclick="clickTitle">
         <cardItems
           moreInfo
@@ -45,6 +47,7 @@
           </div>
         </cardItems>
       </card>
+      <!-- 收藏歌单 -->
       <card moreInfo titleShow class="contItem" titlename="收藏歌单" @titleclick="clickTitle">
         <cardItems
           moreInfo
@@ -114,7 +117,6 @@ export default {
       if (this.songlist.length > 1) {
         res = this.songlist.slice(this.borderIndex)
       }
-
       return res
     }
 

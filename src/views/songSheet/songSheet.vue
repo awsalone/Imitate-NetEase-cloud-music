@@ -147,6 +147,7 @@ export default {
         const data = { t: t, id: this.$route.params.id }
         getcollectSonglist(data)
         this.getSongList()
+        console.log('请求了')
       } else {
         window.localStorage.removeItem('tourist')
         this.$store.commit('delete_playList')

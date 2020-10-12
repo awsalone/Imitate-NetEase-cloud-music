@@ -32,7 +32,7 @@
           <i class="iconfont icon-icon- search" @click="$router.push('/search')"></i>
         </template>
       </HeaderTop>
-      <keep-alive :max="10" include="discovery,mine">
+      <keep-alive :max="10" include="discovery">
         <router-view :class="pseduExist?'pseudoContain':''"></router-view>
       </keep-alive>
       <Player></Player>
